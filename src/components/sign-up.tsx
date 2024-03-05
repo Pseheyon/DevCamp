@@ -49,6 +49,14 @@ export default function FormWithReactHookFormAndZod() {
     },
   });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    setError,
+  } = form;
+
   console.log(form.watch());
   const { toast } = useToast();
   const onSubmit = async (data: TsRegisterSchemaType) => {
@@ -82,13 +90,13 @@ export default function FormWithReactHookFormAndZod() {
   };
 
   return (
-    <div className="p-20 box-border">
+    <div className="p-40 box-border w-100">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="relative space-y-3 overflow-x-hidden"
+          className="relative space-y-2 w-100"
         >
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="username"
@@ -97,7 +105,7 @@ export default function FormWithReactHookFormAndZod() {
                   <FormLabel>이름</FormLabel>
                   <FormControl>
                     <Input
-                      className="focus:outline-none"
+                      className=" focus:outline-none"
                       placeholder="홍길동"
                       {...field}
                     />
@@ -107,7 +115,7 @@ export default function FormWithReactHookFormAndZod() {
               )}
             />
           </div>
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="email"
@@ -120,9 +128,9 @@ export default function FormWithReactHookFormAndZod() {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
           </div>
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="phone"
@@ -135,9 +143,9 @@ export default function FormWithReactHookFormAndZod() {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
           </div>
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="role"
@@ -163,7 +171,7 @@ export default function FormWithReactHookFormAndZod() {
               )}
             />
           </div>
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="password"
@@ -178,7 +186,7 @@ export default function FormWithReactHookFormAndZod() {
               )}
             />
           </div>
-          <div>
+          <div className={"size-full"}>
             <FormField
               control={form.control}
               name="confirmPassword"
@@ -193,7 +201,7 @@ export default function FormWithReactHookFormAndZod() {
               )}
             />
           </div>
-          <div className={"flex gap-2"}>
+          <div className={"flex gap-2 size-full w-100"}>
             <Button className={cn({ hidden: step === 0 })} type="submit">
               계정 등록하기
             </Button>
@@ -219,7 +227,7 @@ export default function FormWithReactHookFormAndZod() {
             </Button>
             <Button
               type="button"
-              variant={"ghost"}
+              variant={"lightblue"}
               className={cn({ hidden: step === 0 })}
               onClick={() => {
                 setStep(0);
