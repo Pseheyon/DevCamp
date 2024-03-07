@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+🚀 프로젝트명
+"NextAuth" - dev camp
 
-First, run the development server:
+<br/>
+🌟 프로젝트 소개
+이 프로젝트는 Next.js를 사용하여 Shacdn/UI, Zod, React Hook Form, 그리고 Resolvers 라이브러리를 활용하여 간단한 회원가입 페이지와 로그인 페이지를 개발하는 것을 목표로 합니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<br/>
+🛠️ 기술 스택
+Next.js
+Shacdn/UI
+Zod
+React Hook Form
+Resolvers
+<br/>
+👥 개발자
+이름	역할
+[박세현]	Frontend (React)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br/>
+📄 목적
+이 프로젝트의 목적은 다음과 같습니다:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+간단한 웹 애플리케이션 개발, 배포
+Next.js, Shacdn/UI, Zod, React Hook Form, Resolvers 사용 연습
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<br/>
+🔧 프로젝트 구조
+프로젝트의 주요 파일 및 폴더 구조는 다음과 같습니다.
 
-## Learn More
+<br/>
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
