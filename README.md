@@ -30,47 +30,47 @@ Next.js, Shacdn/UI, Zod, React Hook Form, Resolvers 사용 연습</div>
 ### 🔧 프로젝트 구조
 
 <div>
-dev_camp-login_join 
-├─ .eslintrc.json
-├─ .gitignore
-├─ components.json
-├─ next.config.mjs
-├─ package.json
-├─ postcss.config.js
-├─ src 
-│  ├─ app  
-│  │  ├─ api  
-│  │  │  ├─ logo  
-│  │  │  └─ signup  
-│  │  │     └─ rooute.ts  
-│  │  ├─ cart  
-│  │  │  └─ page.tsx  
-│  │  ├─ favicon.ico  
-│  │  ├─ globals.css  
-│  │  ├─ layout.tsx  
-│  │  ├─ login  
-│  │  │  └─ page.tsx  
-│  │  ├─ not-found.tsx  
-│  │  └─ page.tsx  
-│  ├─ components  
-│  │  ├─ sign-up.tsx  
-│  │  └─ ui  
-│  │     ├─ button.tsx  
-│  │     ├─ dialog.tsx  
-│  │     ├─ form.tsx  
-│  │     ├─ input.tsx  
-│  │     ├─ label.tsx  
-│  │     ├─ menubar.tsx  
-│  │     ├─ select.tsx  
-│  │     ├─ toast.tsx  
-│  │     ├─ toaster.tsx  
-│  │     └─ use-toast.ts  
-│  ├─ lib  
-│  │  └─ utils.ts  
-│  └─ validators  
-│     └─ auth.ts  
-├─ tailwind.config.ts  
-├─ tsconfig.json  
-└─ yarn.lock  
+dev_camp-login_join 
+├─ .eslintrc.json 
+├─ .gitignore 
+├─ components.json 
+├─ next.config.mjs 
+├─ package.json 
+├─ postcss.config.js 
+├─ src 
+│  ├─ app 
+│  │  ├─ api 
+│  │  │  ├─ logo 
+│  │  │  └─ signup 
+│  │  │     └─ rooute.ts 
+│  │  ├─ cart 
+│  │  │  └─ page.tsx 
+│  │  ├─ favicon.ico 
+│  │  ├─ globals.css 
+│  │  ├─ layout.tsx 
+│  │  ├─ login 
+│  │  │  └─ page.tsx 
+│  │  ├─ not-found.tsx 
+│  │  └─ page.tsx 
+│  ├─ components 
+│  │  ├─ sign-up.tsx 
+│  │  └─ ui 
+│  │     ├─ button.tsx 
+│  │     ├─ dialog.tsx  
+│  │     ├─ form.tsx 
+│  │     ├─ input.tsx 
+│  │     ├─ label.tsx 
+│  │     ├─ menubar.tsx 
+│  │     ├─ select.tsx 
+│  │     ├─ toast.tsx 
+│  │     ├─ toaster.tsx 
+│  │     └─ use-toast.ts 
+│  ├─ lib 
+│  │  └─ utils.ts 
+│  └─ validators 
+│     └─ auth.ts 
+├─ tailwind.config.ts 
+├─ tsconfig.json 
+└─ yarn.lock 
 </div>
 <br/>
