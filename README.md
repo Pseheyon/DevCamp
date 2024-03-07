@@ -29,7 +29,7 @@ Next.js, Shacdn/UI, Zod, React Hook Form, Resolvers 사용 연습</div>
 
 ### 🔧 프로젝트 구조
 
-<div>
+
 dev_camp-login_join 
 ├─ .eslintrc.json 
 ├─ .gitignore 
@@ -72,5 +72,5 @@ dev_camp-login_join 
 ├─ tailwind.config.ts 
 ├─ tsconfig.json 
 └─ yarn.lock 
-</div>
+
 <br/>
