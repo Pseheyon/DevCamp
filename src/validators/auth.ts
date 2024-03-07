@@ -2,7 +2,6 @@ import { z } from "zod";
 const phoneRegex = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-export type TsRegisterSchemaType = z.infer<typeof registerSchema>; // 타입 추론 자동
 export const registerSchema = z.object({
   email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
   phone: z
@@ -22,16 +21,18 @@ export const registerSchema = z.object({
     .string()
     .min(6, "비밀번호는 최소 6자리 이상이어야 합니다.")
     .max(20, "비밀번호는 20자리 이하이어야 합니다.")
-    .refine(
-      (value) => passwordRegex.test(value),
-      "비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다."
-    ),
+    .refine((value) => passwordRegex.test(value), {
+      message:
+        "비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다.",
+    }),
   confirmPassword: z
     .string()
     .min(6, "비밀번호는 최소 6자리 이상이어야 합니다.")
     .max(20, "비밀번호는 20자리 이하이어야 합니다.")
-    .refine(
-      (value) => passwordRegex.test(value),
-      "비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다."
-    ),
+    .refine((value) => passwordRegex.test(value), {
+      message:
+        "비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다.",
+    }),
 });
+
+export type TsRegisterSchemaType = z.infer<typeof registerSchema>; // 타입 추론 자동
