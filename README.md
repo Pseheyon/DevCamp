@@ -1,6 +1,4 @@
-
 ## 🚀 "NextAuth" - dev camp
-
 
 <br/>
 ### 🌟 프로젝트 소개
@@ -21,12 +19,58 @@ Resolvers
 <br/>
 
 ### 📄 목적
+
 간단한 웹 애플리케이션 개발, 배포
 Next.js, Shacdn/UI, Zod, React Hook Form, Resolvers 사용 연습
 
 <br/>
 ### 🔧 프로젝트 구조
-프로젝트의 주요 파일 및 폴더 구조는 다음과 같습니다.
+dev_camp-login_join
+├─ .eslintrc.json
+├─ .git
+│  └─ (git files and directories, excluding unnecessary details)
+├─ .gitignore
+├─ components.json
+├─ next.config.mjs
+├─ package.json
+├─ postcss.config.js
+├─ public
+│  └─ (public files and directories)
+├─ README.md
+├─ src
+│  ├─ app
+│  │  ├─ api
+│  │  │  ├─ logo
+│  │  │  └─ signup
+│  │  │     └─ rooute.ts
+│  │  ├─ cart
+│  │  │  └─ page.tsx
+│  │  ├─ favicon.ico
+│  │  ├─ globals.css
+│  │  ├─ layout.tsx
+│  │  ├─ login
+│  │  │  └─ page.tsx
+│  │  ├─ not-found.tsx
+│  │  └─ page.tsx
+│  ├─ components
+│  │  ├─ sign-up.tsx
+│  │  └─ ui
+│  │     ├─ button.tsx
+│  │     ├─ dialog.tsx
+│  │     ├─ form.tsx
+│  │     ├─ input.tsx
+│  │     ├─ label.tsx
+│  │     ├─ menubar.tsx
+│  │     ├─ select.tsx
+│  │     ├─ toast.tsx
+│  │     ├─ toaster.tsx
+│  │     └─ use-toast.ts
+│  ├─ lib
+│  │  └─ utils.ts
+│  └─ validators
+│     └─ auth.ts
+├─ tailwind.config.ts
+├─ tsconfig.json
+└─ yarn.lock
 
 <br/>
-
