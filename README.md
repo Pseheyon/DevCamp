@@ -34,37 +34,37 @@ Next.js, Shacdn/UI, Zod, React Hook Form, Resolvers 사용 연습</div>
 ### 🔧 프로젝트 구조
 
 <div>
-📦src
- ┣ 📂app
- ┃ ┣ 📂api
- ┃ ┃ ┣ 📂signup
- ┃ ┃ ┃ ┗ 📜rooute.ts
- ┃ ┃ ┗ 📜logo
- ┃ ┣ 📂cart
- ┃ ┃ ┗ 📜page.tsx
- ┃ ┣ 📂login
- ┃ ┃ ┗ 📜page.tsx
- ┃ ┣ 📜favicon.ico
- ┃ ┣ 📜globals.css
- ┃ ┣ 📜layout.tsx
- ┃ ┣ 📜not-found.tsx
- ┃ ┗ 📜page.tsx
- ┣ 📂components
- ┃ ┣ 📂ui
- ┃ ┃ ┣ 📜button.tsx
- ┃ ┃ ┣ 📜dialog.tsx
- ┃ ┃ ┣ 📜form.tsx
- ┃ ┃ ┣ 📜input.tsx
- ┃ ┃ ┣ 📜label.tsx
- ┃ ┃ ┣ 📜menubar.tsx
- ┃ ┃ ┣ 📜select.tsx
- ┃ ┃ ┣ 📜toast.tsx
- ┃ ┃ ┣ 📜toaster.tsx
- ┃ ┃ ┗ 📜use-toast.ts
- ┃ ┗ 📜sign-up.tsx
- ┣ 📂lib
- ┃ ┗ 📜utils.ts
- ┗ 📂validators
- ┃ ┗ 📜auth.ts
+📦src<br/>
+ ┣ 📂app<br/>
+ ┃ ┣ 📂api<br/>
+ ┃ ┃ ┣ 📂signup<br/>
+ ┃ ┃ ┃ ┗ 📜rooute.ts<br/>
+ ┃ ┃ ┗ 📜logo<br/>
+ ┃ ┣ 📂cart<br/>
+ ┃ ┃ ┗ 📜page.tsx<br/>
+ ┃ ┣ 📂login<br/>
+ ┃ ┃ ┗ 📜page.tsx<br/>
+ ┃ ┣ 📜favicon.ico<br/>
+ ┃ ┣ 📜globals.css<br/>
+ ┃ ┣ 📜layout.tsx<br/>
+ ┃ ┣ 📜not-found.tsx<br/>
+ ┃ ┗ 📜page.tsx<br/>
+ ┣ 📂components<br/>
+ ┃ ┣ 📂ui<br/>
+ ┃ ┃ ┣ 📜button.tsx<br/>
+ ┃ ┃ ┣ 📜dialog.tsx<br/>
+ ┃ ┃ ┣ 📜form.tsx<br/>
+ ┃ ┃ ┣ 📜input.tsx<br/>
+ ┃ ┃ ┣ 📜label.tsx<br/>
+ ┃ ┃ ┣ 📜menubar.tsx<br/>
+ ┃ ┃ ┣ 📜select.tsx<br/>
+ ┃ ┃ ┣ 📜toast.tsx<br/>
+ ┃ ┃ ┣ 📜toaster.tsx<br/>
+ ┃ ┃ ┗ 📜use-toast.ts<br/>
+ ┃ ┗ 📜sign-up.tsx<br/>
+ ┣ 📂lib<br/>
+ ┃ ┗ 📜utils.ts<br/>
+ ┗ 📂validators<br/>
+ ┃ ┗ 📜auth.ts<br/>
 </div>
 <br/>
