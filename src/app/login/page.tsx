@@ -82,7 +82,7 @@ export default function Login() {
   return (
     <div className="p-40 box-border w-100">
       <Form {...form}>
-        <h1>계정 생성</h1>
+        <h1>로그인 하기</h1>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="relative space-y-2 w-100"

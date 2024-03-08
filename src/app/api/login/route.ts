@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 const mockUserData = {
   email: "user@example.com",
   password: "pw1234!",
-  rol: "admin",
+  role: "admin",
 };
 export async function POST(request: Request) {
   const body: unknown = await request.json();
-
   const result = loginSchema.safeParse(body);
 
-  // check out Zod's .flatten() method for an easier way to process errors
+  // Zod의 .flatten() 메소드를 사용하여 에러를 더 쉽게 처리할 수 있습니다.
   let zodErrors = {};
   if (!result.success) {
     result.error.issues.forEach((issue) => {
@@ -18,12 +17,18 @@ export async function POST(request: Request) {
     });
   } else {
     console.log("서버확인", result);
-    const { email, password } = result.data;
+    const { email, password, role } = result.data;
 
     const existingUser = mockUserData.email === email ? mockUserData : null;
 
-    if (!existingUser || existingUser.password !== password) {
-      zodErrors = { authentication: "사용자 정보가 없습니다." };
+    if (
+      !existingUser ||
+      existingUser.password !== password ||
+      existingUser.role !== role
+    ) {
+      zodErrors = {
+        authentication: "사용자 정보가 없습니다.",
+      };
     }
   }
 
