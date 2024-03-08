@@ -2,7 +2,7 @@ import { loginSchema } from "@/validators/loginSchema";
 import { NextResponse } from "next/server";
 const mockUserData = {
   email: "user@example.com",
-  password: "pw1234!!",
+  password: "pw1234!",
   rol: "admin",
 };
 export async function POST(request: Request) {

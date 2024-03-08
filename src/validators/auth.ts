@@ -1,7 +1,7 @@
 import { z } from "zod";
 const phoneRegex = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
 const passwordRegex =
-  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 export const registerSchema = z.object({
   email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
   phone: z

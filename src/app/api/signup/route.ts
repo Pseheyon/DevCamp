@@ -6,7 +6,6 @@ export async function POST(request: Request) {
 
   const result = registerSchema.safeParse(body);
 
-  // check out Zod's .flatten() method for an easier way to process errors
   let zodErrors = {};
   if (!result.success) {
     result.error.issues.forEach((issue) => {

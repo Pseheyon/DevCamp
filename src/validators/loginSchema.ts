@@ -1,7 +1,7 @@
 // loginSchema.ts
 import { z } from "zod";
 const passwordRegex =
-  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 export const loginSchema = z.object({
   email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
   password: z
