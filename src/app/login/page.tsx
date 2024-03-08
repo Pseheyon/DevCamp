@@ -33,14 +33,15 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { TsRegisterSchemaType, registerSchema } from "@/validators/auth";
+import { TsLoginSchemaType, loginSchema } from "@/validators/loginSchema";
 import { cn } from "@/lib/utils";
 export default function Login() {
-  const form = useForm<TsRegisterSchemaType>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<TsLoginSchemaType>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
+      role: "",
     },
   });
 
@@ -50,14 +51,14 @@ export default function Login() {
     formState: { errors, isSubmitting },
     reset,
     setError,
-  } = useForm<TsRegisterSchemaType>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<TsLoginSchemaType>({
+    resolver: zodResolver(loginSchema),
   });
 
   const { toast } = useToast();
-  const onSubmit = async (data: TsRegisterSchemaType) => {
+  const onSubmit = async (data: TsLoginSchemaType) => {
     alert(JSON.stringify(data, null, 4));
-    const response = await fetch("/api/signup", {
+    const response = await fetch("/api/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -94,7 +95,10 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>이메일</FormLabel>
                   <FormControl>
-                    <Input placeholder="hello@sparta-devcamp.com" {...field} />
+                    <Input
+                      placeholder="user@example.com_으로 로그인 가능"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,7 +114,11 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>비밀번호</FormLabel>
                   <FormControl>
-                    <Input type={"password"} {...field} />
+                    <Input
+                      placeholder="pw1234!_으로 로그인 가능"
+                      type={"password"}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -149,10 +157,13 @@ export default function Login() {
               type="submit"
               className=" cursor-pointer"
               onClick={(e) => {
+                console.log("클릭 발생!");
                 form.handleSubmit(onSubmit)(e);
               }}
             >
-              <Link href="/cart">로그인하기</Link>
+              {/* <Link href="/cart"> */}
+              로그인하기
+              {/* </Link> */}
             </Button>
             <Button
               variant="lightblue"

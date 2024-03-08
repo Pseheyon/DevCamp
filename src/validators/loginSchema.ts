@@ -1,0 +1,17 @@
+// loginSchema.ts
+import { z } from "zod";
+const passwordRegex =
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+export const loginSchema = z.object({
+  email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
+  password: z
+    .string()
+    .min(6, "비밀번호는 최소 6자리 이상이어야 합니다.")
+    .max(100, "비밀번호는 100자리 이하이어야 합니다.")
+    .refine(
+      (value) => passwordRegex.test(value),
+      "비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다."
+    ),
+  role: z.string().min(2, { message: "역할을 선택해주세요." }),
+});
+export type TsLoginSchemaType = z.infer<typeof loginSchema>;

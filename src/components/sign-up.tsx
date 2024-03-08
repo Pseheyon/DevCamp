@@ -63,8 +63,6 @@ export default function FormWithReactHookFormAndZod() {
 
   const { toast } = useToast();
   const onSubmit = async (data: TsRegisterSchemaType) => {
-    console.log("onSubmit 함수 호출됨");
-    console.log("data", data);
     const { password, confirmPassword } = data;
     if (password !== confirmPassword) {
       toast({
@@ -224,7 +222,6 @@ export default function FormWithReactHookFormAndZod() {
               className={cn({ hidden: step === 0 })}
               type="submit"
               onClick={(e) => {
-                console.log("클릭 발생!");
                 form.handleSubmit(onSubmit)(e);
               }}
             >
