@@ -1,4 +1,3 @@
-// loginSchema.ts
 import { z } from "zod";
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;

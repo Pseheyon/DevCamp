@@ -31,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { TsLoginSchemaType, loginSchema } from "@/validators/loginSchema";
 import { cn } from "@/lib/utils";
@@ -55,7 +54,6 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const { toast } = useToast();
   const onSubmit = async (data: TsLoginSchemaType) => {
     alert(JSON.stringify(data, null, 4));
     const response = await fetch("/api/login", {
@@ -73,7 +71,6 @@ export default function Login() {
 
     if (responseData.errors) {
       const errors = responseData.errors;
-      console.log("responseData.errors", responseData.errors);
     }
     if (response.ok) {
     }
@@ -157,13 +154,10 @@ export default function Login() {
               type="submit"
               className=" cursor-pointer"
               onClick={(e) => {
-                console.log("클릭 발생!");
                 form.handleSubmit(onSubmit)(e);
               }}
             >
-              {/* <Link href="/cart"> */}
-              로그인하기
-              {/* </Link> */}
+              <Link href="/cart">로그인하기</Link>
             </Button>
             <Button
               variant="lightblue"

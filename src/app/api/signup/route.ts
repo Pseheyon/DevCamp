@@ -1,4 +1,4 @@
-import { registerSchema } from "@/validators/auth";
+import { registerSchema } from "@/validators/signupSchema";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

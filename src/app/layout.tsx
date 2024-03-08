@@ -7,7 +7,6 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar";
@@ -34,7 +33,7 @@ export default function RootLayout({
             </MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
-                New Tab <MenubarShortcut>바로가기</MenubarShortcut>
+                홈 <MenubarShortcut>바로가기</MenubarShortcut>
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
@@ -44,7 +43,7 @@ export default function RootLayout({
             </MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
-                New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+                회원가입 <MenubarShortcut>⌘T</MenubarShortcut>
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
@@ -54,7 +53,7 @@ export default function RootLayout({
             </MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
-                New Tab <MenubarShortcut>바로가기</MenubarShortcut>
+                로그인 <MenubarShortcut>바로가기</MenubarShortcut>
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
@@ -64,7 +63,7 @@ export default function RootLayout({
             </MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
-                New Tab <MenubarShortcut>바로가기</MenubarShortcut>
+                장바구니 <MenubarShortcut>바로가기</MenubarShortcut>
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>

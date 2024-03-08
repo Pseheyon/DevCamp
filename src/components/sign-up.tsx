@@ -33,7 +33,10 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { TsRegisterSchemaType, registerSchema } from "@/validators/auth";
+import {
+  TsRegisterSchemaType,
+  registerSchema,
+} from "@/validators/signupSchema";
 import { cn } from "@/lib/utils";
 export default function FormWithReactHookFormAndZod() {
   const [step, setStep] = useState<number>(0);
@@ -59,8 +62,6 @@ export default function FormWithReactHookFormAndZod() {
     resolver: zodResolver(registerSchema),
   });
 
-  //console.log(form.watch());
-
   const { toast } = useToast();
   const onSubmit = async (data: TsRegisterSchemaType) => {
     const { password, confirmPassword } = data;
@@ -82,14 +83,12 @@ export default function FormWithReactHookFormAndZod() {
     });
     const responseData = await response.json();
     if (!response.ok) {
-      // response status is not 2xx
       alert("Submitting form failed!");
       return;
     }
 
     if (responseData.errors) {
       const errors = responseData.errors;
-      console.log("responseData.errors", responseData.errors);
     }
   };
 
