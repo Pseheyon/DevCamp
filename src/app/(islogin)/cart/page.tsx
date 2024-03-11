@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -17,38 +18,53 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import {
-  TsRegisterSchemaType,
-  registerSchema,
-} from "@/validators/signupSchema";
+import { TsOrderSchemaType, orderSchema } from "@/validators/cartSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 export default function Cart() {
-  const form = useForm<TsRegisterSchemaType>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<TsOrderSchemaType>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
-      phone: "",
-      email: "",
-      role: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
+      user: {
+        username: "",
+        email: "",
+        phoneNumber: "",
+      },
+      shippingInfo: {
+        address: "",
+        city: "",
+        zipCode: "",
+      },
+      couponPoint: {
+        couponCode: "",
+        pointsUsed: 0,
+      },
+      paymentAmount: {
+        discount: 0,
+        total: 0,
+      },
+      paymentMethod: {
+        method: "",
+      },
+      purchaseAgreement: {
+        termsAndConditions: false,
+        privacyPolicy: false,
+      },
     },
   });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
     setError,
-  } = useForm<TsRegisterSchemaType>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<TsOrderSchemaType>({
+    resolver: zodResolver(orderSchema),
   });
-  const onSubmit = async (data: TsRegisterSchemaType) => {
-    const { password, confirmPassword } = data;
 
-    alert(JSON.stringify(data, null, 4));
-    const response = await fetch("/api/signup", {
+  const onSubmit = async (data: TsOrderSchemaType) => {
+    const response = await fetch("/api/cart", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -65,7 +81,6 @@ export default function Cart() {
       const errors = responseData.errors;
     }
   };
-
   return (
     <main className="bg-slate-50 px-60 flex flex-col justify-center">
       <Form
@@ -81,9 +96,26 @@ export default function Cart() {
         >
           <Card className="basis-3/5 rounded-none bg-inherit">
             <Card className=" bg-white mt-4 boder rounded-none p-1 shadow-sm border">
-              <CardTitle className="p-4 ">주문 상품 정보</CardTitle>
+              <CardTitle className="p-4 ">주문자 정보</CardTitle>
               <CardHeader className="p-4 pb-2 pt-1 font-bold">
-                주문 상품 정보
+                주문자 정보
+                <FormField
+                  control={form.control}
+                  name="user.username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>이름</FormLabel>
+                      <FormControl>
+                        <Input
+                          className=" focus:outline-none"
+                          placeholder="홍길동"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardHeader>
             </Card>
             <Card className=" bg-white mt-4 boder rounded-none shadow-sm border">

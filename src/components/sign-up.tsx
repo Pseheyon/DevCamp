@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ArrowRight } from "lucide-react";
+import { z } from "zod";
 import {
   Dialog,
   DialogClose,
