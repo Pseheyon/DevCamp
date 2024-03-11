@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "./ui/use-toast";
 import { Input } from "@/components/ui/input";
 import {
   TsRegisterSchemaType,
