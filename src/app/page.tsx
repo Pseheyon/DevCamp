@@ -1,19 +1,78 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import FormWithReactHookFormAndZod from "@/components/sign-up";
+import { ChevronRightIcon } from "lucide-react";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Signup from "./(logout)/signup/page";
+import Link from "next/link";
 export default function Home() {
   return (
-    <main>
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          데브캠프&nbsp;
-          <code className="font-mono font-bold">로그인 회원가입</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none"></div>
-      </div>
-
-      <Signup></Signup>
+    <main className="flex flex-col flex-row items-center size-full justify-center">
+      <Menubar className="w-full">
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Link href="/">홈</Link>
+          </MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              홈 <MenubarShortcut>바로가기</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Link href="/">회원가입</Link>
+          </MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              회원가입 <MenubarShortcut>바로가기</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Link href="/login">로그인</Link>
+          </MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              로그인 <MenubarShortcut>바로가기</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>
+            <Link href="/cart">장바구니</Link>
+          </MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>
+              장바구니 <MenubarShortcut>바로가기</MenubarShortcut>
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+      <Card className="w-96 max-w-96 min-w-56 m-32">
+        <CardHeader className="font-bold">🌟방문을 환영합니다!!🌟</CardHeader>
+        <CardContent className="flex gap-2 items-center ">
+          <Link href={"/signup"} className="basis-1/2">
+            <Button className="w-full">
+              회원가입하러 가기 <ChevronRightIcon />
+            </Button>
+          </Link>
+          <Link href={"/login"} className="basis-1/2">
+            <Button variant="lightblue" Taweight="bold" className="w-full">
+              로그인 하러 가기
+              <ChevronRightIcon />
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
     </main>
   );
 }
