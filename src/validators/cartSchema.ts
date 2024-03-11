@@ -2,24 +2,23 @@ import { z } from "zod";
 
 const userSchema = z.object({
   username: z.string(),
-  email: z.string().email(),
+  email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
   phoneNumber: z.string(),
 });
 
 const productInfoSchema = z.object({
-  id: z.string(),
   productname: z.string(),
+  productdetail: z.string(),
   price: z.number(),
-  imgUrl: z.string(),
 });
 
 const shippingInfoSchema = z.object({
   address: z.string(),
-  city: z.string(),
-  zipCode: z.string(),
+  shippingType: z.string(),
 });
 
 const couponPointSchema = z.object({
+  couponPoint: z.string().optional(),
   couponCode: z.string().optional(),
   pointsUsed: z.number().int().optional(),
 });
@@ -48,7 +47,7 @@ export const orderSchema = z.object({
   user: userSchema,
   productInfo: productInfoSchema,
   shippingInfo: shippingInfoSchema,
-  couponPoint: couponPointSchema,
+  coupon: couponPointSchema,
   paymentAmount: paymentAmountSchema,
   paymentMethod: paymentMethodSchema,
   purchaseAgreement: purchaseAgreementSchema,
