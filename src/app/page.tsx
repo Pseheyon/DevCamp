@@ -28,7 +28,7 @@ export default function Home() {
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>
-            <Link href="/">회원가입</Link>
+            <Link href="/signup">회원가입</Link>
           </MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
@@ -57,7 +57,7 @@ export default function Home() {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <Card className="w-96 max-w-96 min-w-56 m-32">
+      <Card className="p-8 box-border m-40 ">
         <CardHeader className="font-bold">🌟방문을 환영합니다!!🌟</CardHeader>
         <CardContent className="flex gap-2 items-center ">
           <Link href={"/signup"} className="basis-1/2">
