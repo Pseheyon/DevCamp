@@ -19,10 +19,10 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         deepnavy:
-          "bg-indigo-500 hover:bg-indigo-600 text-[14px] text-white transition-all duration-300",
+          "bg-indigo-500 hover:bg-indigo-600 text-[14px] text-white transition-all duration-300  font-bold",
 
         lightblue:
-          "bg-cyan-200 hover:bg-cyan-400 text-[14px] font-bold text-primaryBlue-default hover:bg-primaryBlue-100/50 transition-all duration-300",
+          "bg-cyan-200 hover:bg-cyan-400 text-[14px] font-bold text-primaryBlue-default hover:bg-primaryBlue-100/50 transition-all duration-300 font-bold",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -14,7 +14,7 @@ import Signup from "./(logout)/signup/page";
 import Link from "next/link";
 export default function Home() {
   return (
-    <main className="flex flex-col flex-row items-center size-full justify-center">
+    <main className="flex flex-col items-center size-full justify-center">
       <Menubar className="w-full">
         <MenubarMenu>
           <MenubarTrigger>
