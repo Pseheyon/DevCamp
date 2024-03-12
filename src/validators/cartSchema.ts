@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+const phoneRegex = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
 const userSchema = z.object({
   username: z.string(),
   email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
@@ -10,6 +10,7 @@ const productInfoSchema = z.object({
   productname: z.string(),
   productdetail: z.string(),
   price: z.number(),
+  quantity: z.number(),
 });
 
 const shippingInfoSchema = z.object({
@@ -18,20 +19,33 @@ const shippingInfoSchema = z.object({
 });
 
 const couponPointSchema = z.object({
-  couponPoint: z.string().optional(),
+  couponPoint: z
+    .string()
+    .transform((value) => Number(value))
+    .refine((value) => !isNaN(value) && Number.isInteger(value), {
+      message: "포인트는 숫자로만 입력해야 합니다.",
+    })
+    .optional(),
   couponCode: z.string().optional(),
-  pointsUsed: z.number().int().optional(),
+  pointsUsed: z
+    .string()
+    .transform((value) => Number(value))
+    .refine((value) => !isNaN(value) && Number.isInteger(value), {
+      message: "포인트는 숫자로만 입력해야 합니다.",
+    })
+    .optional(),
 });
 
 const paymentAmountSchema = z.object({
-  subtotal: z.number(),
+  subtotal: z.number().optional(),
   discount: z.number().optional(),
-  shippingFee: z.number(),
+  shippingFee: z.number().optional(),
   total: z.number(),
+  depositor: z.number().optional(),
 });
 
 const paymentMethodSchema = z.object({
-  method: z.string(),
+  payment: z.string(),
 });
 
 const purchaseAgreementSchema = z.object({

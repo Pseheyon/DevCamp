@@ -24,41 +24,61 @@ import { Input } from "@/components/ui/input";
 import { TsOrderSchemaType, orderSchema } from "@/validators/cartSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { mockCartData } from "@/app/api/cart/route";
 
 import Image from "next/image";
+import { Children, useEffect, useState } from "react";
 export default function Cart() {
-  const form = useForm<TsOrderSchemaType>({
+  const [cartData, setCartData] = useState(mockCartData[0]);
+  useEffect(() => {
+    // 데이터를 비동기적으로 불러와서 상태 업데이트
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/path-to-your-json-file/cartMockup.json");
+        const data = await response.json();
+        setCartData(data.cartMockup[0]); // 데이터가 배열로 되어 있으면 첫 번째 아이템 사용
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const form = useForm({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       user: {
-        username: "",
-        email: "",
-        phoneNumber: "",
+        username: cartData?.user.username || "",
+        email: cartData?.user.email || "",
+        phoneNumber: cartData?.user.phoneNumber || "",
       },
       productInfo: {
-        productname: "",
-        productdetail: "",
-        price: 0,
+        productname: cartData?.productInfo.productname || "",
+        productdetail: cartData?.productInfo.productdetail || "",
+        price: cartData?.productInfo.price || 0,
+        quantity: cartData?.productInfo.quantity || 1,
       },
       shippingInfo: {
-        address: "",
-        shippingType: "",
+        address: cartData?.shippingInfo.address || "",
+        shippingType: cartData?.shippingInfo.shippingType || "",
       },
       coupon: {
-        couponPoint: "",
-        couponCode: "",
-        pointsUsed: 0,
+        couponPoint: cartData?.coupon.couponPoint || 0,
+        couponCode: cartData?.coupon.couponCode || "",
+        pointsUsed: cartData?.coupon.pointsUsed || 0,
       },
       paymentAmount: {
-        discount: 0,
-        total: 0,
+        discount: cartData?.paymentAmount.discount || 0,
+        total: cartData?.paymentAmount.total || 0,
       },
       paymentMethod: {
-        method: "",
+        payment: cartData?.paymentMethod.payment || "option-one",
       },
       purchaseAgreement: {
-        termsAndConditions: false,
-        privacyPolicy: false,
+        termsAndConditions:
+          cartData?.purchaseAgreement.termsAndConditions || false,
+        privacyPolicy: cartData?.purchaseAgreement.privacyPolicy || false,
       },
     },
   });
@@ -94,6 +114,7 @@ export default function Cart() {
       const errors = responseData.errors;
     }
   };
+
   return (
     <main className="bg-slate-50 grid justify-center ">
       <Form
@@ -121,14 +142,15 @@ export default function Cart() {
                   ></Image>
                 </div>
                 <div className="px-4 box-border w-full">
+                  {/* 상품명 */}
                   <FormField
                     control={form.control}
                     name="productInfo.productname"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <h6 className="font-bold" {...field}>
-                            귀여운 고양이
+                          <h6 className="font-bold">
+                            {cartData.productInfo.productname}
                           </h6>
                         </FormControl>
                         <FormMessage />
@@ -136,6 +158,7 @@ export default function Cart() {
                     )}
                   />
                   <div className="flex text-slate-400 text-xs pb-2  h-10  ">
+                    {/* 상품정보 */}
                     <FormField
                       control={form.control}
                       name="productInfo.productdetail"
@@ -159,6 +182,7 @@ export default function Cart() {
                         </FormItem>
                       )}
                     />
+                    {/* 구매수량 */}
                     <FormField
                       control={form.control}
                       name="productInfo.productname"
@@ -181,6 +205,7 @@ export default function Cart() {
                     />
                   </div>
                   <div className="flex  text-xs pb-2 w-full h-10 justify-between h-10px overflow-hidden">
+                    {/* 가격 */}
                     <FormField
                       control={form.control}
                       name="productInfo.price"
@@ -195,9 +220,10 @@ export default function Cart() {
                         </FormItem>
                       )}
                     />
+                    {/*구매 수량 + 버튼*/}
                     <FormField
                       control={form.control}
-                      name="productInfo.productname"
+                      name="productInfo.quantity"
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
@@ -236,6 +262,7 @@ export default function Cart() {
               </CardTitle>
 
               <CardContent className="flex flex-row w-full justify-between">
+                {/*구매자*/}
                 <div>
                   <FormField
                     control={form.control}
@@ -249,6 +276,7 @@ export default function Cart() {
                       </FormItem>
                     )}
                   />
+                  {/*번호*/}
                   <FormField
                     control={form.control}
                     name="user.phoneNumber"
@@ -261,15 +289,13 @@ export default function Cart() {
                       </FormItem>
                     )}
                   />
-
+                  {/*이메일*/}
                   <FormField
                     control={form.control}
                     name="user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <p className="text-slate-500" {...field}>
-                          asdf@naver.com
-                        </p>
+                        <p className="text-slate-500">{field.value}</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -283,6 +309,7 @@ export default function Cart() {
             <Card className=" bg-white mt-4 boder rounded-none shadow-sm border ">
               <CardTitle className="p-4 pt-5 ">배송 정보</CardTitle>
               <CardContent className="flex flex-row w-full justify-between">
+                {/*배송자 명*/}
                 <div>
                   <FormField
                     control={form.control}
@@ -296,6 +323,7 @@ export default function Cart() {
                       </FormItem>
                     )}
                   />
+                  {/*배송자 번호*/}
                   <FormField
                     control={form.control}
                     name="user.phoneNumber"
@@ -308,6 +336,7 @@ export default function Cart() {
                       </FormItem>
                     )}
                   />
+                  {/*배송자 주소*/}
                   <FormField
                     control={form.control}
                     name="shippingInfo.address"
@@ -327,6 +356,7 @@ export default function Cart() {
                 </Button>
               </CardContent>
               <CardContent>
+                {/*배송 메모*/}
                 <FormField
                   control={form.control}
                   name="shippingInfo.shippingType"
@@ -358,7 +388,11 @@ export default function Cart() {
             <Card className=" bg-white mt-4 mb-8 boder rounded-none box-border shadow-sm border">
               <CardTitle className="p-4 pt-5 ">쿠폰/포인트</CardTitle>
               <CardHeader className=" pb-2 pt-1 font-bold">쿠폰</CardHeader>
-              <CardContent className="flex size-full justify-center gap-2 rounded-none w-full">
+              <CardContent
+                className="flex size-full justify-center gap-2 
+              rounded-none w-full"
+              >
+                {/*쿠폰 포인트-- */}
                 <FormField
                   control={form.control}
                   name="coupon.couponPoint"
@@ -368,6 +402,7 @@ export default function Cart() {
                         <Input
                           className=" rounded-none bg-inherit border"
                           placeholder="1,000"
+                          type="number"
                           {...field}
                         />
                       </FormControl>
@@ -383,13 +418,15 @@ export default function Cart() {
                   쿠폰적용
                 </Button>
               </CardContent>
+
               <CardHeader className=" pb-2 pt-1 font-bold">
                 쿠폰 번호
               </CardHeader>
               <CardContent className="flex size-full justify-center gap-2 rounded-none w-full">
+                {/*쿠폰 코드-% */}
                 <FormField
                   control={form.control}
-                  name="coupon.couponPoint"
+                  name="coupon.couponCode"
                   render={({ field }) => (
                     <FormItem className="basis-4/5">
                       <FormControl className="w-full">
@@ -414,15 +451,17 @@ export default function Cart() {
               <CardHeader className=" pb-2 pt-1 font-bold">포인트</CardHeader>
               <CardContent>
                 <div className="flex size-full justify-center gap-2 rounded-none w-full">
+                  {/*쿠폰 포인트*/}
                   <FormField
                     control={form.control}
-                    name="coupon.couponPoint"
+                    name="coupon.pointsUsed"
                     render={({ field }) => (
                       <FormItem className="basis-4/5">
                         <FormControl className="w-full">
                           <Input
                             className=" rounded-none bg-inherit border"
                             placeholder="0"
+                            type="number"
                             {...field}
                           />
                         </FormControl>
@@ -452,9 +491,10 @@ export default function Cart() {
               <CardTitle className="p-4 ">최종 결제 금액</CardTitle>
               <CardContent>
                 <div className="flex flex-row w-full justify-between">
+                  {/*상품 가격*/}
                   <FormField
                     control={form.control}
-                    name="user.username"
+                    name="productInfo.price"
                     render={({ field }) => (
                       <FormItem>
                         <p className="text-slate-500 font-medium" {...field}>
@@ -470,7 +510,7 @@ export default function Cart() {
                   </p>
                 </div>
                 <div className="flex flex-row w-full justify-between">
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="user.username"
                     render={({ field }) => (
@@ -481,44 +521,22 @@ export default function Cart() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-
+                  /> */}
+                  {/*쿠폰 + 쿠폰 할인*/}
+                  <p className="text-slate-500 font-medium">쿠폰 할인</p>
                   <p className="font-bold">
                     <span>-</span>1000<span>원</span>
                   </p>
                 </div>
                 <div className="flex flex-row w-full justify-between">
-                  <FormField
-                    control={form.control}
-                    name="user.username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <p className="text-slate-500 font-medium" {...field}>
-                          포인트 사용
-                        </p>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <p className="text-slate-500 font-medium">포인트 사용</p>
 
                   <p className="font-bold">
                     <span>-</span>0<span>원</span>
                   </p>
                 </div>
                 <div className="flex flex-row w-full justify-between">
-                  <FormField
-                    control={form.control}
-                    name="user.username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <p className="text-slate-500 font-medium" {...field}>
-                          배송비
-                        </p>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                  <p className="text-slate-500 font-medium">배송비</p>
                   <p className="font-bold">
                     <span>+</span>2500<span>원</span>
                   </p>
@@ -531,7 +549,7 @@ export default function Cart() {
               </CardContent>
               <CardContent className=" bg-slate-50 w-full p-3 justify-items-center">
                 <h6 className="flex items-center text-center">
-                  <span className=" text-indigo-600 font-black">700</span>{" "}
+                  <span className=" text-indigo-600 font-black">700</span>
                   포인트 적립예정
                 </h6>
               </CardContent>
@@ -542,31 +560,59 @@ export default function Cart() {
             <Card className=" bg-white mt-4 boder rounded-none p-1 shadow-sm border">
               <CardTitle className="p-4 ">최종 결제 금액</CardTitle>
               <CardContent>
-                <RadioGroup
-                  className="grid gap-2 w-full grid-cols-2"
-                  defaultValue="option-one"
-                >
-                  <div className="flex items-center space-x-2 ">
-                    <RadioGroupItem value="option-one" id="option-one" />
-                    <Label htmlFor="option-one">신용 카드</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 basis-1/2">
-                    <RadioGroupItem value="option-two" id="option-two" />
-                    <Label htmlFor="option-two">가상계좌</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 basis-1/2">
-                    <RadioGroupItem value="option-tree" id="option-tree" />
-                    <Label htmlFor="option-tree">무통장 입금</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 basis-1/2">
-                    <RadioGroupItem value="option-four" id="option-four" />
-                    <Label htmlFor="option-four">핸드폰 결제</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 basis-1/2">
-                    <RadioGroupItem value="option-five" id="option-five" />
-                    <Label htmlFor="option-five">카카오 페이</Label>
-                  </div>
-                </RadioGroup>
+                <FormField
+                  control={form.control}
+                  name="paymentMethod.payment"
+                  render={({ field }) => (
+                    <FormItem>
+                      <RadioGroup
+                        className="grid gap-2 w-full grid-cols-2"
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <>
+                            <div className="flex items-center space-x-2 ">
+                              <RadioGroupItem
+                                value="option-one"
+                                id="option-one"
+                              />
+                              <Label htmlFor="option-one">신용 카드</Label>
+                            </div>
+                            <div className="flex items-center space-x-2 basis-1/2">
+                              <RadioGroupItem
+                                value="option-two"
+                                id="option-two"
+                              />
+                              <Label htmlFor="option-two">가상계좌</Label>
+                            </div>
+                            <div className="flex items-center space-x-2 basis-1/2">
+                              <RadioGroupItem
+                                value="option-tree"
+                                id="option-tree"
+                              />
+                              <Label htmlFor="option-tree">무통장 입금</Label>
+                            </div>
+                            <div className="flex items-center space-x-2 basis-1/2">
+                              <RadioGroupItem
+                                value="option-four"
+                                id="option-four"
+                              />
+                              <Label htmlFor="option-four">핸드폰 결제</Label>
+                            </div>
+                            <div className="flex items-center space-x-2 basis-1/2">
+                              <RadioGroupItem
+                                value="option-five"
+                                id="option-five"
+                              />
+                              <Label htmlFor="option-five">카카오 페이</Label>
+                            </div>
+                          </>
+                        </FormControl>
+                      </RadioGroup>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
               <CardContent>
                 <FormField
@@ -596,8 +642,27 @@ export default function Cart() {
                     </FormItem>
                   )}
                 />
-                <p className="mt-2 text-slate-500 font-medium text-s">
-                  <span>+</span>2500<span>원</span>
+                <FormField
+                  control={form.control}
+                  name="paymentAmount.depositor"
+                  render={({ field }) => (
+                    <FormItem className="mt-2">
+                      <FormControl className="w-full">
+                        <Input
+                          className=" rounded-none bg-inherit border"
+                          placeholder="입급자명을 입력하세요"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <p className="mt-2 text-slate-500 font-medium text-xs">
+                  <span>
+                    주문 후 24시간동안 미입금시 자동 취소가 될 수 있습니다.
+                  </span>
                 </p>
                 <hr className="mt-2 mb-4" />
                 <div className="items-top flex space-x-2">
@@ -615,33 +680,69 @@ export default function Cart() {
             </Card>
             <Card className=" bg-white mt-4 pb-4 boder rounded-none p-0 shadow-sm border">
               <CardContent className="pt-5">
-                <div className="items-top flex space-x-2 mb-4">
-                  <Checkbox id="terms1" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="terms1"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      전체동의
-                    </label>
-                  </div>
-                </div>
+                <FormField
+                  control={form.control}
+                  name="purchaseAgreement.termsAndConditions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="items-top flex space-x-2 mb-4">
+                        <Checkbox
+                          id="terms1"
+                          checked={field.value}
+                          onCheckedChange={() => field.onChange(!field.value)}
+                          {...field}
+                        />
+                        <div className="grid gap-1.5 leading-none">
+                          <label
+                            htmlFor="terms1"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            전체동의
+                          </label>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="items-top flex space-x-2 ml-4">
-                  <Checkbox id="terms1" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="terms1"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      구매조건 확인 및 결제진행에 동의
-                    </label>
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="purchaseAgreement.privacyPolicy"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="items-top flex space-x-2 mb-4">
+                          <Checkbox
+                            id="terms1"
+                            checked={field.value}
+                            onCheckedChange={() => field.onChange(!field.value)}
+                            {...field}
+                          />
+                          <div className="grid gap-1.5 leading-none">
+                            <label
+                              htmlFor="terms1"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              구매조건 확인 및 결제진행에 동의
+                            </label>
+                          </div>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </CardContent>
               <CardContent className="grid justify-items-center  bg-indigo-600 w-full p-3 justify-center text-center">
-                <h6 className="flex items-center text-center text-white font-extrabold self-center w-full basis-full">
+                <Button
+                  className="flex items-center text-center text-white font-extrabold self-center w-full basis-full"
+                  type="submit"
+                  onClick={(e) => {
+                    form.handleSubmit(onSubmit)(e);
+                  }}
+                >
                   결제하기
-                </h6>
+                </Button>
               </CardContent>
             </Card>
           </Card>
