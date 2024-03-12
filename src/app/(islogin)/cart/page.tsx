@@ -95,22 +95,22 @@ export default function Cart() {
     }
   };
   return (
-    <main className="bg-slate-50 px-60 flex flex-col justify-center">
+    <main className="bg-slate-50 grid justify-center ">
       <Form
         {...form}
         // className="bg-slate-50 px-60 flex flex-col justify-center"
       >
-        <h3 className=" p-4 box-border text-center font-extrabold text-lg pb-8">
+        <h3 className=" p-4 box-border text-center font-extrabold text-lg pb-8 ">
           결제하기
         </h3>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex justify-center gap-4 min-h-dvh rounded-none bg-slate-50 w-60% pl-20% pr-20% box-border justify-self-center"
+          className="grid grid-cols-4 justify-center justify-self-center gap-4 min-h-dvh rounded-none bg-slate-50  box-border w-[100%] "
         >
-          <Card className="basis-3/5 rounded-none bg-inherit">
+          <Card className=" col-span-3 rounded-none bg-inherit">
             <Card className=" bg-white mt-4 boder rounded-none p-1 shadow-sm border">
               <CardTitle className="p-4 ">주문 상품 정보</CardTitle>
-              <CardContent className="flex flex-row w-full ">
+              <CardContent className="flex flex-row  ">
                 <div>
                   <Image
                     src="/cat.jpg"
@@ -447,7 +447,7 @@ export default function Cart() {
               </CardContent>
             </Card>
           </Card>
-          <Card className="basis-2/5 rounded-none bg-inherit">
+          <Card className="col-span-1 rounded-none bg-inherit">
             <Card className=" bg-white mt-4 boder rounded-none p-1 shadow-sm border">
               <CardTitle className="p-4 ">최종 결제 금액</CardTitle>
               <CardContent>
