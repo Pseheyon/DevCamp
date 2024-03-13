@@ -46,6 +46,7 @@ const paymentAmountSchema = z.object({
 
 const paymentMethodSchema = z.object({
   payment: z.string(),
+  depositor: z.string(),
 });
 
 const purchaseAgreementSchema = z.object({
@@ -65,7 +66,6 @@ export const orderSchema = z.object({
   paymentAmount: paymentAmountSchema,
   paymentMethod: paymentMethodSchema,
   purchaseAgreement: purchaseAgreementSchema,
-  cachesPay: z.boolean(),
 });
 
 export type TsOrderSchemaType = z.infer<typeof orderSchema>;

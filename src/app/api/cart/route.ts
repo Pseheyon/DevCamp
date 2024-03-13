@@ -31,12 +31,12 @@ export const mockCartData: TsOrderSchemaType[] = [
     },
     paymentMethod: {
       payment: "option-one",
+      depositor: "박루미",
     },
     purchaseAgreement: {
       termsAndConditions: true,
       privacyPolicy: true,
     },
-    cachesPay: false, // 새로 추가한 필드
   },
 ];
 

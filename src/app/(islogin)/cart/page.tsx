@@ -74,6 +74,7 @@ export default function Cart() {
       },
       paymentMethod: {
         payment: cartData?.paymentMethod.payment || "option-one",
+        depositor: cartData?.paymentMethod.depositor || "",
       },
       purchaseAgreement: {
         termsAndConditions:
@@ -644,7 +645,7 @@ export default function Cart() {
                 />
                 <FormField
                   control={form.control}
-                  name="paymentAmount.depositor"
+                  name="paymentMethod.depositor"
                   render={({ field }) => (
                     <FormItem className="mt-2">
                       <FormControl className="w-full">

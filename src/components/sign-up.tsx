@@ -63,6 +63,7 @@ export default function FormWithReactHookFormAndZod() {
   });
 
   const { toast } = useToast();
+
   const onSubmit = async (data: TsRegisterSchemaType) => {
     const { password, confirmPassword } = data;
     if (password !== confirmPassword) {
