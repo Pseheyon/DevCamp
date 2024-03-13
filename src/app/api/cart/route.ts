@@ -19,6 +19,9 @@ export const mockCartData: TsOrderSchemaType[] = [
     shippingInfo: {
       address: "123 부산 중구 대동로 40-21번지 길바닥집, ",
       shippingType: "000000",
+      recipient: "쫀덕이",
+      recipientphone: "123-456-7890",
+      memo: "dor",
     },
     coupon: {
       couponPoint: 1000,

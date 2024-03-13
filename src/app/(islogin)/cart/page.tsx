@@ -32,26 +32,19 @@ import { Divide } from "lucide-react";
 import { date } from "zod";
 export default function Cart() {
   const [cartData, setCartData] = useState(mockCartData[0]);
-  const [isEditMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({
     username: cartData.user.username,
     email: cartData.user.email,
     phoneNumber: cartData.user.phoneNumber,
   });
-  // useEffect(() => {
-  //   // 데이터를 비동기적으로 불러와서 상태 업데이트
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("/api/cart");
-  //       const data = await response.json();
-  //       setCartData(data.cartMockup[0]); // 데이터가 배열로 되어 있으면 첫 번째 아이템 사용
-  //     } catch (error) {
-  //       console.error("Error fetching cart data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  const [shippingInfoe, setshippingInfoe] = useState({
+    address: cartData.shippingInfo.address,
+    shippingType: cartData.shippingInfo.shippingType,
+    recipient: cartData.shippingInfo.recipient,
+    recipientphone: cartData.shippingInfo.recipientphone,
+  });
+  const [isUserEditMode, setUserEditMode] = useState(false);
+  const [isShippingEditMode, setShippingEditMode] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(orderSchema),
@@ -70,6 +63,9 @@ export default function Cart() {
       shippingInfo: {
         address: cartData?.shippingInfo.address || "",
         shippingType: cartData?.shippingInfo.shippingType || "",
+        recipient: cartData?.shippingInfo.recipient || "",
+        recipientphone: cartData?.shippingInfo.recipientphone || "",
+        memo: cartData?.shippingInfo.memo || "",
       },
       coupon: {
         couponPoint: cartData?.coupon.couponPoint || 0,
@@ -120,17 +116,28 @@ export default function Cart() {
   const amoutQuantitypay =
     cartData.productInfo.price * cartData.productInfo.quantity;
 
-  const handleEditClick = () => {
-    setEditMode(true);
+  const handleUserEditClick = () => {
+    setUserEditMode(true);
   };
 
-  const handleSaveClick = () => {
-    // 수정된 사용자 정보를 저장
+  const handleUserSaveClick = () => {
     setCartData((prevCartData) => ({
       ...prevCartData,
       user: editedUser,
     }));
-    setEditMode(false);
+    setUserEditMode(false);
+  };
+
+  const handleShippingEditClick = () => {
+    setShippingEditMode(true);
+  };
+
+  const handleShippingSaveClick = () => {
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      shippingInfo: setshippingInfoe,
+    }));
+    setShippingEditMode(false);
   };
 
   console.log(form.watch());
@@ -320,7 +327,7 @@ export default function Cart() {
                       <div className="flex">
                         <FormItem>
                           <FormControl>
-                            {isEditMode ? (
+                            {isUserEditMode ? (
                               <Input
                                 value={editedUser.username}
                                 onChange={(e) => {
@@ -345,13 +352,13 @@ export default function Cart() {
                       </div>
                     )}
                   />
-                  ㅁㄴㅇㄹ
+
                   <FormField
                     control={form.control}
                     name="user.email"
                     render={({ field }) => (
                       <FormItem>
-                        {isEditMode ? (
+                        {isUserEditMode ? (
                           <Input
                             {...field}
                             value={editedUser.email}
@@ -377,7 +384,7 @@ export default function Cart() {
                     name="user.phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        {isEditMode ? (
+                        {isUserEditMode ? (
                           <Input
                             {...field}
                             value={editedUser.phoneNumber}
@@ -401,11 +408,11 @@ export default function Cart() {
                 </div>
 
                 <div>
-                  {isEditMode ? (
+                  {isUserEditMode ? (
                     <Button
                       variant="outline"
                       className="rounded-[3px]"
-                      onClick={handleSaveClick}
+                      onClick={handleUserSaveClick}
                     >
                       저장
                     </Button>
@@ -413,7 +420,7 @@ export default function Cart() {
                     <Button
                       variant="outline"
                       className="rounded-[3px]"
-                      onClick={handleEditClick}
+                      onClick={handleShippingEditClick}
                     >
                       수정
                     </Button>
@@ -428,12 +435,29 @@ export default function Cart() {
                 <div>
                   <FormField
                     control={form.control}
-                    name="user.username"
+                    name="shippingInfo.recipient"
                     render={({ field }) => (
                       <FormItem>
-                        <h5 className="font-bold" {...field}>
-                          홍길동
-                        </h5>
+                        {isShippingEditMode ? (
+                          <Input
+                            value={shippingInfoe.recipient}
+                            onChange={(e) => {
+                              setshippingInfoe((prevUser) => ({
+                                ...prevUser,
+                                recipient: e.target.value,
+                              }));
+                              form.setValue(
+                                "shippingInfo.recipient",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        ) : (
+                          <h5 className="font-bold" {...field}>
+                            {cartData.shippingInfo.recipient}
+                          </h5>
+                        )}
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -441,12 +465,29 @@ export default function Cart() {
                   {/*배송자 번호*/}
                   <FormField
                     control={form.control}
-                    name="user.phoneNumber"
+                    name="shippingInfo.recipientphone"
                     render={({ field }) => (
                       <FormItem>
-                        <p className="text-slate-500" {...field}>
-                          01012345678
-                        </p>
+                        {isShippingEditMode ? (
+                          <Input
+                            value={shippingInfoe.recipientphone}
+                            onChange={(e) => {
+                              setshippingInfoe((prevUser) => ({
+                                ...prevUser,
+                                recipientphone: e.target.value,
+                              }));
+                              form.setValue(
+                                "shippingInfo.recipientphone",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        ) : (
+                          <p className="text-slate-500" {...field}>
+                            {cartData.shippingInfo.recipientphone}
+                          </p>
+                        )}
+
                         <FormMessage />
                       </FormItem>
                     )}
@@ -457,18 +498,48 @@ export default function Cart() {
                     name="shippingInfo.address"
                     render={({ field }) => (
                       <FormItem {...field}>
-                        <h6>
-                          서울 특별시 서대문구 성산로7길 89-8(연희동) 주식회사
-                          아임웹 (03706)
-                        </h6>
+                        {isShippingEditMode ? (
+                          <Input
+                            value={shippingInfoe.address}
+                            onChange={(e) => {
+                              setshippingInfoe((prevUser) => ({
+                                ...prevUser,
+                                address: e.target.value,
+                              }));
+                              form.setValue(
+                                "shippingInfo.address",
+                                e.target.value
+                              );
+                            }}
+                          />
+                        ) : (
+                          <h6>{cartData.shippingInfo.address}</h6>
+                        )}
+
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-                <Button variant="outline" className="rounded-[3px]">
-                  변경
-                </Button>
+                <div>
+                  {isShippingEditMode ? (
+                    <Button
+                      variant="outline"
+                      className="rounded-[3px]"
+                      onClick={handleShippingSaveClick}
+                    >
+                      저장
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="rounded-[3px]"
+                      onClick={handleShippingEditClick}
+                    >
+                      변경
+                    </Button>
+                  )}
+                </div>
               </CardContent>
               <CardContent>
                 {/*배송 메모*/}

@@ -16,6 +16,9 @@ const productInfoSchema = z.object({
 const shippingInfoSchema = z.object({
   address: z.string(),
   shippingType: z.string(),
+  recipient: z.string(),
+  recipientphone: z.string(),
+  memo: z.string(),
 });
 
 const couponPointSchema = z.object({
