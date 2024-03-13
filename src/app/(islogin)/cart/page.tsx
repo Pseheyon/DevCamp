@@ -106,6 +106,9 @@ export default function Cart() {
   const handleQuantityChange = (newQuantity: number) => {
     // 수량이 1 미만으로 내려가지 않도록 체크
     const updatedQuantity = Math.max(newQuantity, 1);
+    const updatedtotal = cartData.productInfo.price * newQuantity;
+    form.setValue("productInfo.quantity", updatedQuantity);
+    form.setValue("paymentAmount.total", updatedtotal);
 
     setCartData((prevCartData) => ({
       ...prevCartData,
@@ -113,12 +116,12 @@ export default function Cart() {
         ...prevCartData.productInfo,
         quantity: updatedQuantity,
       },
+      paymentAmount: {
+        ...prevCartData.paymentAmount,
+        total: updatedtotal,
+      },
     }));
   };
-  const getPoint = Math.round(cartData.paymentAmount.total / 100);
-
-  const amoutQuantitypay =
-    cartData.productInfo.price * cartData.productInfo.quantity;
 
   const handleUserEditClick = () => {
     setUserEditMode(true);
@@ -143,8 +146,89 @@ export default function Cart() {
     }));
     setShippingEditMode(false);
   };
+  console.log(form.watch());
+  const getPoint = Math.round(cartData.paymentAmount.total / 100);
 
-  // console.log(form.watch());
+  const amoutQuantitypay =
+    cartData.productInfo.price * cartData.productInfo.quantity;
+
+  //포인트사용
+  const handlePointsUsedChange = (e) => {
+    const numericValue = isNaN(parseFloat(e.target.value))
+      ? e.target.value
+      : parseFloat(e.target.value);
+
+    const minPoints = 5000;
+    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+
+    const clampedValue = Math.max(
+      maxPoints - Math.max(minPoints, numericValue),
+      0
+    );
+
+    // 포인트 사용이 변경되었을 때, 상태 업데이트
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      coupon: {
+        ...prevCartData.coupon,
+        couponPoint: clampedValue,
+      },
+    }));
+  };
+
+  const handleUseAllPoints = () => {
+    const updatedtotal =
+      cartData.paymentAmount.total - cartData.coupon.couponPoint;
+    form.setValue("paymentAmount.total", updatedtotal);
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      paymentAmount: {
+        ...prevCartData.paymentAmount,
+        total: updatedtotal,
+      },
+    }));
+
+    console.log("포인트 사용 확인", cartData.coupon.couponPoint);
+  };
+  //포인트사용
+  const handlePointsDiscountChange = (e) => {
+    const numericValue = isNaN(parseFloat(e.target.value))
+      ? e.target.value
+      : parseFloat(e.target.value);
+
+    const minPoints = 20;
+    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+
+    const clampedValue = maxPoints - maxPoints * (minPoints * 0.01);
+
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      coupon: {
+        ...prevCartData.coupon,
+        pointsUsed: clampedValue,
+      },
+    }));
+  };
+
+  const handleUseDiscount = () => {
+    const minPoints = 20;
+    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+
+    const updatedtotal =
+      cartData.paymentAmount.total - maxPoints * (minPoints * 0.01);
+    // 전액 사용 버튼을 눌렀을 때, 가용한 포인트만큼 사용
+    form.setValue("paymentAmount.total", updatedtotal);
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      paymentAmount: {
+        ...prevCartData.paymentAmount,
+        total: updatedtotal,
+      },
+    }));
+    console.log("포인트 사용 확인", cartData.coupon.couponPoint);
+  };
+
+  let totaldis = Math.max(amoutQuantitypay - cartData.coupon.couponPoint, 0);
 
   const onSubmit = async (data: TsOrderSchemaType) => {
     const response = await fetch("/api/cart", {
@@ -263,6 +347,24 @@ export default function Cart() {
                             <p className=" text-base text font-black ">
                               반려묘 가격
                               <span>{cartData.productInfo.price}</span> 만원
+                            </p>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="paymentAmount.total"
+                      render={({ field }) => (
+                        <FormItem className="basis-4/5">
+                          <FormControl>
+                            <p
+                              className=" text-base text font-black "
+                              {...field}
+                            >
+                              반려묘 가격
+                              <span>{cartData.paymentAmount.total}</span>
                             </p>
                           </FormControl>
                           <FormMessage />
@@ -601,20 +703,7 @@ export default function Cart() {
                           placeholder="1,000"
                           type="number"
                           {...field}
-                          onChange={(e) => {
-                            // 입력값이 숫자로 변환 가능한지 확인 후 변환
-                            const numericValue = isNaN(
-                              parseFloat(e.target.value)
-                            )
-                              ? e.target.value
-                              : parseFloat(e.target.value);
-
-                            // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
-                            form.setValue(
-                              "coupon.couponPoint",
-                              numericValue as number
-                            );
-                          }}
+                          onChange={handlePointsUsedChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -626,9 +715,11 @@ export default function Cart() {
                   type="button"
                   variant="deepnavy"
                   className="basis-1/5 text-center box-border rounded-[3px]"
+                  onClick={handleUseAllPoints}
                 >
                   쿠폰적용
                 </Button>
+                {totaldis}
               </CardContent>
 
               <CardHeader className=" pb-2 pt-1 font-bold">
@@ -636,7 +727,7 @@ export default function Cart() {
               </CardHeader>
               <CardContent className="flex size-full justify-center gap-2 rounded-none w-full">
                 {/*쿠폰 코드-% */}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="coupon.couponCode"
                   render={({ field }) => (
@@ -646,6 +737,7 @@ export default function Cart() {
                           className=" rounded-none bg-inherit border"
                           placeholder="쿠폰 번호 입력"
                           {...field}
+                          onChange={handlePointsDiscountChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -657,9 +749,10 @@ export default function Cart() {
                   type="button"
                   variant="deepnavy"
                   className="basis-1/5 text-center box-border rounded-[3px]"
+                  onClick={handleUseDiscount}
                 >
                   번호확인
-                </Button>
+                </Button> */}
               </CardContent>
               <CardHeader className=" pb-2 pt-1 font-bold">포인트</CardHeader>
               <CardContent>
@@ -676,22 +769,7 @@ export default function Cart() {
                             placeholder="0"
                             type="number"
                             {...field}
-                            onChange={(e) => {
-                              // 입력값이 숫자로 변환 가능한지 확인 후 변환
-
-                              const numericValue = isNaN(
-                                parseFloat(e.target.value)
-                              )
-                                ? e.target.value
-                                : parseFloat(e.target.value);
-
-                              if (field.value !== numericValue) {
-                                form.setValue(
-                                  "coupon.couponPoint",
-                                  numericValue as number
-                                );
-                              }
-                            }}
+                            onChange={handlePointsDiscountChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -703,12 +781,13 @@ export default function Cart() {
                     type="button"
                     variant="deepnavy"
                     className="basis-1/5 text-center box-border rounded-[3px]"
+                    onClick={handleUseDiscount}
                   >
-                    전액사용
+                    사용
                   </Button>
                 </div>
                 <p className=" text-slate-800 text-s pt-1 font-bold">
-                  보유 포인트 <span>2,300</span>
+                  보유 포인트 <span>{cartData.coupon.pointsUsed}</span>
                 </p>
                 <p className=" text-slate-400 text-xs pt-1 ">
                   5000 포인트 이상 보유 및 10,000 이상 구매시 사용가능
@@ -753,7 +832,7 @@ export default function Cart() {
                     )}
                   /> */}
                   {/*쿠폰 + 쿠폰 할인*/}
-                  <p className="text-slate-500 font-medium">쿠폰 할인</p>
+                  <p className="text-slate-500 font-medium"></p>
                   <p className="font-bold">
                     <span>-</span>1000<span>원</span>
                   </p>

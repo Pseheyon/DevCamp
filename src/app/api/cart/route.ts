@@ -24,13 +24,13 @@ export const mockCartData: TsOrderSchemaType[] = [
       memo: "dor",
     },
     coupon: {
-      couponPoint: 1000,
-      couponCode: "DISCOUNT123",
-      pointsUsed: 200,
+      couponPoint: 6000,
+      couponCode: "DISCOUNT123-20% 할인 쿠폰",
+      pointsUsed: 20,
     },
     paymentAmount: {
-      discount: 5,
-      total: 25460,
+      discount: 0,
+      total: 0,
     },
     paymentMethod: {
       payment: "option-one",
