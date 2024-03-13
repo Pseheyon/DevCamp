@@ -25,11 +25,14 @@ import { TsOrderSchemaType, orderSchema } from "@/validators/cartSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { mockCartData } from "@/app/api/cart/route";
-
+import { z } from "zod";
 import Image from "next/image";
 import { Children, useEffect, useState } from "react";
 import { Divide } from "lucide-react";
 import { date } from "zod";
+
+//type TsOrderSchemaType = z.infer<typeof orderSchema>;
+
 export default function Cart() {
   const [cartData, setCartData] = useState(mockCartData[0]);
   const [editedUser, setEditedUser] = useState({
@@ -42,11 +45,12 @@ export default function Cart() {
     shippingType: cartData.shippingInfo.shippingType,
     recipient: cartData.shippingInfo.recipient,
     recipientphone: cartData.shippingInfo.recipientphone,
+    memo: cartData.shippingInfo.memo,
   });
   const [isUserEditMode, setUserEditMode] = useState(false);
   const [isShippingEditMode, setShippingEditMode] = useState(false);
 
-  const form = useForm({
+  const form = useForm<TsOrderSchemaType>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       user: {
@@ -135,12 +139,12 @@ export default function Cart() {
   const handleShippingSaveClick = () => {
     setCartData((prevCartData) => ({
       ...prevCartData,
-      shippingInfo: setshippingInfoe,
+      shippingInfo: shippingInfoe,
     }));
     setShippingEditMode(false);
   };
 
-  console.log(form.watch());
+  // console.log(form.watch());
 
   const onSubmit = async (data: TsOrderSchemaType) => {
     const response = await fetch("/api/cart", {
@@ -212,6 +216,7 @@ export default function Cart() {
                           <FormControl className="flex justify-center">
                             <>
                               <Button
+                                type="button"
                                 size="icon"
                                 variant="outline"
                                 className=" box-border h-min mr-1"
@@ -277,6 +282,7 @@ export default function Cart() {
                             <div className="flex justify-center self-stretch mt-1 h-sss">
                               <Button
                                 variant="outline"
+                                type="button"
                                 className=" rounded-none box-border size-px px-2 py-2"
                                 onClick={() =>
                                   handleQuantityChange(
@@ -294,6 +300,7 @@ export default function Cart() {
                               </span>
                               <Button
                                 variant="outline"
+                                type="button"
                                 className=" rounded-none box-border size-px px-2 py-2 "
                                 onClick={() =>
                                   handleQuantityChange(
@@ -411,6 +418,7 @@ export default function Cart() {
                   {isUserEditMode ? (
                     <Button
                       variant="outline"
+                      type="button"
                       className="rounded-[3px]"
                       onClick={handleUserSaveClick}
                     >
@@ -418,9 +426,10 @@ export default function Cart() {
                     </Button>
                   ) : (
                     <Button
+                      type="button"
                       variant="outline"
                       className="rounded-[3px]"
-                      onClick={handleShippingEditClick}
+                      onClick={handleUserEditClick}
                     >
                       수정
                     </Button>
@@ -524,6 +533,7 @@ export default function Cart() {
                 <div>
                   {isShippingEditMode ? (
                     <Button
+                      type="button"
                       variant="outline"
                       className="rounded-[3px]"
                       onClick={handleShippingSaveClick}
@@ -532,6 +542,7 @@ export default function Cart() {
                     </Button>
                   ) : (
                     <Button
+                      type="button"
                       variant="outline"
                       className="rounded-[3px]"
                       onClick={handleShippingEditClick}
@@ -612,6 +623,7 @@ export default function Cart() {
                 />
 
                 <Button
+                  type="button"
                   variant="deepnavy"
                   className="basis-1/5 text-center box-border rounded-[3px]"
                 >
@@ -642,6 +654,7 @@ export default function Cart() {
                 />
 
                 <Button
+                  type="button"
                   variant="deepnavy"
                   className="basis-1/5 text-center box-border rounded-[3px]"
                 >
@@ -672,9 +685,7 @@ export default function Cart() {
                                 ? e.target.value
                                 : parseFloat(e.target.value);
 
-                              // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
                               if (field.value !== numericValue) {
-                                // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
                                 form.setValue(
                                   "coupon.couponPoint",
                                   numericValue as number
@@ -689,6 +700,7 @@ export default function Cart() {
                   />
 
                   <Button
+                    type="button"
                     variant="deepnavy"
                     className="basis-1/5 text-center box-border rounded-[3px]"
                   >
@@ -838,7 +850,7 @@ export default function Cart() {
               <CardContent>
                 <FormField
                   control={form.control}
-                  name="shippingInfo.shippingType"
+                  name="paymentMethod.payment"
                   render={({ field }) => (
                     <FormItem>
                       <Select
@@ -901,7 +913,7 @@ export default function Cart() {
             </Card>
             <Card className=" bg-white mt-4 pb-4 boder rounded-none p-0 shadow-sm border">
               <CardContent className="pt-5">
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="purchaseAgreement.termsAndConditions"
                   render={({ field }) => (
@@ -925,9 +937,9 @@ export default function Cart() {
                       <FormMessage />
                     </FormItem>
                   )}
-                /> */}
+                />
                 <div className="items-top flex space-x-2 ml-4">
-                  {/* <FormField
+                  <FormField
                     control={form.control}
                     name="purchaseAgreement.termsAndConditions"
                     render={({ field }) => (
@@ -951,7 +963,7 @@ export default function Cart() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  /> */}
+                  />
                 </div>
               </CardContent>
               <CardContent className="grid justify-items-center  bg-indigo-600 w-full p-3 justify-center text-center">
