@@ -10,7 +10,7 @@ const productInfoSchema = z.object({
   productname: z.string(),
   productdetail: z.string(),
   price: z.number(),
-  quantity: z.number(),
+  quantity: z.number().min(1),
 });
 
 const shippingInfoSchema = z.object({
@@ -20,7 +20,7 @@ const shippingInfoSchema = z.object({
 
 const couponPointSchema = z.object({
   couponPoint: z
-    .string()
+    .number()
     .transform((value) => Number(value))
     .refine((value) => !isNaN(value) && Number.isInteger(value), {
       message: "포인트는 숫자로만 입력해야 합니다.",
@@ -28,7 +28,7 @@ const couponPointSchema = z.object({
     .optional(),
   couponCode: z.string().optional(),
   pointsUsed: z
-    .string()
+    .number()
     .transform((value) => Number(value))
     .refine((value) => !isNaN(value) && Number.isInteger(value), {
       message: "포인트는 숫자로만 입력해야 합니다.",

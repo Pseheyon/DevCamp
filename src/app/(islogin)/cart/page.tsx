@@ -28,22 +28,30 @@ import { mockCartData } from "@/app/api/cart/route";
 
 import Image from "next/image";
 import { Children, useEffect, useState } from "react";
+import { Divide } from "lucide-react";
+import { date } from "zod";
 export default function Cart() {
   const [cartData, setCartData] = useState(mockCartData[0]);
-  useEffect(() => {
-    // 데이터를 비동기적으로 불러와서 상태 업데이트
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/path-to-your-json-file/cartMockup.json");
-        const data = await response.json();
-        setCartData(data.cartMockup[0]); // 데이터가 배열로 되어 있으면 첫 번째 아이템 사용
-      } catch (error) {
-        console.error("Error fetching cart data:", error);
-      }
-    };
+  const [isEditMode, setEditMode] = useState(false);
+  const [editedUser, setEditedUser] = useState({
+    username: cartData.user.username,
+    email: cartData.user.email,
+    phoneNumber: cartData.user.phoneNumber,
+  });
+  // useEffect(() => {
+  //   // 데이터를 비동기적으로 불러와서 상태 업데이트
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("/api/cart");
+  //       const data = await response.json();
+  //       setCartData(data.cartMockup[0]); // 데이터가 배열로 되어 있으면 첫 번째 아이템 사용
+  //     } catch (error) {
+  //       console.error("Error fetching cart data:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   const form = useForm({
     resolver: zodResolver(orderSchema),
@@ -78,8 +86,8 @@ export default function Cart() {
       },
       purchaseAgreement: {
         termsAndConditions:
-          cartData?.purchaseAgreement.termsAndConditions || false,
-        privacyPolicy: cartData?.purchaseAgreement.privacyPolicy || false,
+          cartData?.purchaseAgreement.termsAndConditions || true,
+        privacyPolicy: cartData?.purchaseAgreement.privacyPolicy || true,
       },
     },
   });
@@ -94,7 +102,37 @@ export default function Cart() {
     resolver: zodResolver(orderSchema),
   });
 
-  // log the form data whenever it changes
+  //수량변경
+  const handleQuantityChange = (newQuantity: number) => {
+    // 수량이 1 미만으로 내려가지 않도록 체크
+    const updatedQuantity = Math.max(newQuantity, 1);
+
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      productInfo: {
+        ...prevCartData.productInfo,
+        quantity: updatedQuantity,
+      },
+    }));
+  };
+  const getPoint = Math.round(cartData.paymentAmount.total / 100);
+
+  const amoutQuantitypay =
+    cartData.productInfo.price * cartData.productInfo.quantity;
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleSaveClick = () => {
+    // 수정된 사용자 정보를 저장
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      user: editedUser,
+    }));
+    setEditMode(false);
+  };
+
   console.log(form.watch());
 
   const onSubmit = async (data: TsOrderSchemaType) => {
@@ -105,6 +143,8 @@ export default function Cart() {
         "Content-Type": "application/json",
       },
     });
+    alert(JSON.stringify(data, null, 4));
+
     const responseData = await response.json();
     if (!response.ok) {
       alert("Submitting form failed!");
@@ -118,10 +158,7 @@ export default function Cart() {
 
   return (
     <main className="bg-slate-50 grid justify-center ">
-      <Form
-        {...form}
-        // className="bg-slate-50 px-60 flex flex-col justify-center"
-      >
+      <Form {...form}>
         <h3 className=" p-4 box-border text-center font-extrabold text-lg pb-8 ">
           결제하기
         </h3>
@@ -174,8 +211,8 @@ export default function Cart() {
                               >
                                 정보
                               </Button>
-                              <span className="mr-1" {...field}>
-                                귀엽다
+                              <span className="mr-1">
+                                {cartData.productInfo.productdetail}
                               </span>
                             </>
                           </FormControl>
@@ -191,11 +228,9 @@ export default function Cart() {
                         <FormItem>
                           <FormControl>
                             <div className="flex justify-center self-stretch mt-1">
-                              <span
-                                className=" box-border  text-center self-stretch "
-                                {...field}
-                              >
-                                - 1
+                              (수량)
+                              <span className=" box-border  text-center self-stretch ">
+                                - {cartData.productInfo.quantity}
                               </span>
                               <span>마리</span>
                             </div>
@@ -205,22 +240,26 @@ export default function Cart() {
                       )}
                     />
                   </div>
-                  <div className="flex  text-xs pb-2 w-full h-10 justify-between h-10px overflow-hidden">
+                  <div className="flex  text-xs pb-2 w-full h-10 justify-between h-10px items-center">
                     {/* 가격 */}
                     <FormField
                       control={form.control}
                       name="productInfo.price"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="basis-4/5">
                           <FormControl>
-                            <p className=" text-base text font-black">
-                              <span {...field}>18000</span> 원
+                            <p className=" text-base text font-black ">
+                              반려묘 가격
+                              <span>{cartData.productInfo.price}</span> 만원
                             </p>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    <p className="text text-indigo-600 font-black text-xl">
+                      <span>{amoutQuantitypay}</span> 만원
+                    </p>
                     {/*구매 수량 + 버튼*/}
                     <FormField
                       control={form.control}
@@ -232,6 +271,11 @@ export default function Cart() {
                               <Button
                                 variant="outline"
                                 className=" rounded-none box-border size-px px-2 py-2"
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    cartData.productInfo.quantity - 1
+                                  )
+                                }
                               >
                                 -
                               </Button>
@@ -239,11 +283,16 @@ export default function Cart() {
                                 className=" box-border  text-center self-stretch  p-1"
                                 {...field}
                               >
-                                1
+                                {cartData.productInfo.quantity}
                               </span>
                               <Button
                                 variant="outline"
                                 className=" rounded-none box-border size-px px-2 py-2 "
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    cartData.productInfo.quantity + 1
+                                  )
+                                }
                               >
                                 +
                               </Button>
@@ -263,48 +312,113 @@ export default function Cart() {
               </CardTitle>
 
               <CardContent className="flex flex-row w-full justify-between">
-                {/*구매자*/}
                 <div>
                   <FormField
                     control={form.control}
                     name="user.username"
                     render={({ field }) => (
-                      <FormItem>
-                        <h5 className="font-bold" {...field}>
-                          홍길동
-                        </h5>
-                        <FormMessage />
-                      </FormItem>
+                      <div className="flex">
+                        <FormItem>
+                          <FormControl>
+                            {isEditMode ? (
+                              <Input
+                                value={editedUser.username}
+                                onChange={(e) => {
+                                  setEditedUser((prevUser) => ({
+                                    ...prevUser,
+                                    username: e.target.value,
+                                  }));
+                                  form.setValue(
+                                    "user.username",
+                                    e.target.value
+                                  );
+                                }}
+                              />
+                            ) : (
+                              <p className="text-slate-500" {...field}>
+                                {cartData.user.username}
+                              </p>
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      </div>
                     )}
                   />
-                  {/*번호*/}
-                  <FormField
-                    control={form.control}
-                    name="user.phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <p className="text-slate-500" {...field}>
-                          01012345678
-                        </p>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/*이메일*/}
+                  ㅁㄴㅇㄹ
                   <FormField
                     control={form.control}
                     name="user.email"
                     render={({ field }) => (
                       <FormItem>
-                        <p className="text-slate-500">{field.value}</p>
+                        {isEditMode ? (
+                          <Input
+                            {...field}
+                            value={editedUser.email}
+                            onChange={(e) => {
+                              setEditedUser((prevUser) => ({
+                                ...prevUser,
+                                email: e.target.value,
+                              }));
+                              form.setValue("user.email", e.target.value);
+                            }}
+                          />
+                        ) : (
+                          <p className="text-slate-500">
+                            {cartData.user.email}
+                          </p>
+                        )}
+                        <FormMessage className="m-5" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="user.phoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        {isEditMode ? (
+                          <Input
+                            {...field}
+                            value={editedUser.phoneNumber}
+                            onChange={(e) => {
+                              setEditedUser((prevUser) => ({
+                                ...prevUser,
+                                phoneNumber: e.target.value,
+                              }));
+                              form.setValue("user.phoneNumber", e.target.value);
+                            }}
+                          />
+                        ) : (
+                          <p className="text-slate-500">
+                            {cartData.user.phoneNumber}
+                          </p>
+                        )}
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
-                <Button variant="outline" className="rounded-[3px]">
-                  수정
-                </Button>
+
+                <div>
+                  {isEditMode ? (
+                    <Button
+                      variant="outline"
+                      className="rounded-[3px]"
+                      onClick={handleSaveClick}
+                    >
+                      저장
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="rounded-[3px]"
+                      onClick={handleEditClick}
+                    >
+                      수정
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
             <Card className=" bg-white mt-4 boder rounded-none shadow-sm border ">
@@ -401,10 +515,24 @@ export default function Cart() {
                     <FormItem className="basis-4/5">
                       <FormControl className="w-full">
                         <Input
-                          className=" rounded-none bg-inherit border"
+                          className="rounded-none bg-inherit border"
                           placeholder="1,000"
                           type="number"
                           {...field}
+                          onChange={(e) => {
+                            // 입력값이 숫자로 변환 가능한지 확인 후 변환
+                            const numericValue = isNaN(
+                              parseFloat(e.target.value)
+                            )
+                              ? e.target.value
+                              : parseFloat(e.target.value);
+
+                            // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
+                            form.setValue(
+                              "coupon.couponPoint",
+                              numericValue as number
+                            );
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -460,10 +588,28 @@ export default function Cart() {
                       <FormItem className="basis-4/5">
                         <FormControl className="w-full">
                           <Input
-                            className=" rounded-none bg-inherit border"
+                            className="rounded-none bg-inherit border"
                             placeholder="0"
                             type="number"
                             {...field}
+                            onChange={(e) => {
+                              // 입력값이 숫자로 변환 가능한지 확인 후 변환
+
+                              const numericValue = isNaN(
+                                parseFloat(e.target.value)
+                              )
+                                ? e.target.value
+                                : parseFloat(e.target.value);
+
+                              // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
+                              if (field.value !== numericValue) {
+                                // react-hook-form의 setValue 함수를 사용하여 값을 업데이트
+                                form.setValue(
+                                  "coupon.couponPoint",
+                                  numericValue as number
+                                );
+                              }
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -543,14 +689,16 @@ export default function Cart() {
                   </p>
                 </div>
                 <hr className="mt-4 mb-4" />
-                <div className="flex flex-row w-full justify-between">
+                <div className="flex flex-row w-full justify-between items-center">
                   <h5>총 결제 금액</h5>
-                  <h5 className=" font-black text-indigo-600 ">19,500 원</h5>
+                  <h5 className=" font-black text-indigo-600 text-2xl"></h5>
                 </div>
               </CardContent>
               <CardContent className=" bg-slate-50 w-full p-3 justify-items-center">
                 <h6 className="flex items-center text-center">
-                  <span className=" text-indigo-600 font-black">700</span>
+                  <span className=" text-indigo-600 font-black">
+                    {getPoint}
+                  </span>
                   포인트 적립예정
                 </h6>
               </CardContent>
@@ -567,8 +715,9 @@ export default function Cart() {
                   render={({ field }) => (
                     <FormItem>
                       <RadioGroup
-                        className="grid gap-2 w-full grid-cols-2"
+                        className="grid"
                         defaultValue={field.value}
+                        onValueChange={field.onChange}
                       >
                         <FormControl>
                           <>
@@ -681,7 +830,7 @@ export default function Cart() {
             </Card>
             <Card className=" bg-white mt-4 pb-4 boder rounded-none p-0 shadow-sm border">
               <CardContent className="pt-5">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="purchaseAgreement.termsAndConditions"
                   render={({ field }) => (
@@ -705,11 +854,11 @@ export default function Cart() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
                 <div className="items-top flex space-x-2 ml-4">
-                  <FormField
+                  {/* <FormField
                     control={form.control}
-                    name="purchaseAgreement.privacyPolicy"
+                    name="purchaseAgreement.termsAndConditions"
                     render={({ field }) => (
                       <FormItem>
                         <div className="items-top flex space-x-2 mb-4">
@@ -731,7 +880,7 @@ export default function Cart() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </div>
               </CardContent>
               <CardContent className="grid justify-items-center  bg-indigo-600 w-full p-3 justify-center text-center">
@@ -739,6 +888,7 @@ export default function Cart() {
                   className="flex items-center text-center text-white font-extrabold self-center w-full basis-full"
                   type="submit"
                   onClick={(e) => {
+                    console.log("확인", date);
                     form.handleSubmit(onSubmit)(e);
                   }}
                 >

@@ -6,36 +6,36 @@ import { TsOrderSchemaType, orderSchema } from "@/validators/cartSchema";
 export const mockCartData: TsOrderSchemaType[] = [
   {
     user: {
-      username: "JohnDoe",
-      email: "john.doe@example.com",
+      username: "루미",
+      email: "lumi@example.com",
       phoneNumber: "123-456-7890",
     },
     productInfo: {
-      productname: "Sample Product",
-      productdetail: "This is a sample product.",
-      price: 29.99,
+      productname: "루미고양이",
+      productdetail: "너무 귀엽지",
+      price: 1000,
       quantity: 2,
     },
     shippingInfo: {
-      address: "123 Main St, Cityville",
-      shippingType: "Express",
+      address: "123 부산 중구 대동로 40-21번지 길바닥집, ",
+      shippingType: "000000",
     },
     coupon: {
-      couponPoint: 10,
+      couponPoint: 1000,
       couponCode: "DISCOUNT123",
-      pointsUsed: 5,
+      pointsUsed: 200,
     },
     paymentAmount: {
       discount: 5,
-      total: 54.98,
+      total: 25460,
     },
     paymentMethod: {
       payment: "option-one",
       depositor: "박루미",
     },
     purchaseAgreement: {
-      termsAndConditions: true,
-      privacyPolicy: true,
+      termsAndConditions: false,
+      privacyPolicy: false,
     },
   },
 ];
@@ -51,6 +51,7 @@ export async function POST(request: Request) {
     });
   } else {
     // Mock 데이터를 업데이트
+    console.log("결제 결과", result);
     const updatedData: TsOrderSchemaType = result.data;
     mockCartData[0] = updatedData;
   }
