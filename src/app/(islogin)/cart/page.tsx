@@ -33,6 +33,7 @@ import { date } from "zod";
 import CouponCodeFrom from "@/components/couponCode";
 import CouponPointFrom from "@/components/couponPoint";
 import CouponPointUsedFrom from "@/components/couponPointUsed";
+import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 //type TsOrderSchemaType = z.infer<typeof orderSchema>;
 
@@ -243,64 +244,43 @@ export default function Cart() {
     console.log("쿠폰코드", cartData.coupon.couponCode);
     alert(cartData.paymentAmount.total);
   };
+  const user = cartData.user.username;
+  const amount = cartData.paymentAmount.total;
+  const orderId = Math.random().toString(36).slice(2);
+  const orderName = cartData.productInfo.productname;
 
-  //포인트사용
-  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numericValue = isNaN(parseFloat(e.target.value))
-      ? e.target.value
-      : parseFloat(e.target.value);
-
-    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
-
-    const clampedValue = maxPoints - maxPoints * (numericValue * 0.01);
-
-    setCartData((prevCartData) => ({
-      ...prevCartData,
-      coupon: {
-        ...prevCartData.coupon,
-        pointsUsed: clampedValue,
-      },
-    }));
-  };
-
-  const handleUse = () => {
-    const minPoints = 20;
-    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
-
-    const updatedtotal =
-      cartData.paymentAmount.total - maxPoints * (minPoints * 0.01);
-    // 전액 사용 버튼을 눌렀을 때, 가용한 포인트만큼 사용
-    form.setValue("paymentAmount.total", updatedtotal);
-    setCartData((prevCartData) => ({
-      ...prevCartData,
-      paymentAmount: {
-        ...prevCartData.paymentAmount,
-        total: updatedtotal,
-      },
-    }));
-    console.log("포인트 사용 확인", cartData.coupon.couponPoint);
-  };
-
-  const onSubmit = async (data: TsOrderSchemaType) => {
-    const response = await fetch("/api/cart", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const onSubmit = async (data: any) => {
+    const tossPayments = await loadTossPayments(
+      process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY
+    );
+    await tossPayments.requestPayment("카드", {
+      amount: amount,
+      orderId,
+      orderName: orderName,
+      successUrl: `${window.location.origin}/api/payments`,
+      failUrl: `${window.location.origin}/api/payments/fail`,
     });
-    alert(JSON.stringify(data, null, 4));
-
-    const responseData = await response.json();
-    if (!response.ok) {
-      alert("Submitting form failed!");
-      return;
-    }
-
-    if (responseData.errors) {
-      const errors = responseData.errors;
-    }
   };
+  // const onSubmit = async (data: TsOrderSchemaType) => {
+  //   const response = await fetch("/api/cart", {
+  //     method: "POST",
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   });
+  //   alert(JSON.stringify(data, null, 4));
+
+  //   const responseData = await response.json();
+  //   if (!response.ok) {
+  //     alert("Submitting form failed!");
+  //     return;
+  //   }
+
+  //   if (responseData.errors) {
+  //     const errors = responseData.errors;
+  //   }
+  // };
 
   let totaldis = Math.max(amoutQuantitypay - cartData.coupon.couponPoint, 0);
   return (
@@ -1091,10 +1071,7 @@ export default function Cart() {
                 <Button
                   className="flex items-center text-center text-white font-extrabold self-center w-full basis-full"
                   type="submit"
-                  onClick={(e) => {
-                    console.log("확인", date);
-                    form.handleSubmit(onSubmit)(e);
-                  }}
+                  onClick={onSubmit}
                 >
                   결제하기
                 </Button>
