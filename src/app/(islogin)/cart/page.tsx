@@ -30,6 +30,7 @@ import Image from "next/image";
 import { Children, useEffect, useState } from "react";
 import { Divide } from "lucide-react";
 import { date } from "zod";
+import CouponCodeFrom from "@/components/couponCode";
 
 //type TsOrderSchemaType = z.infer<typeof orderSchema>;
 
@@ -770,13 +771,12 @@ export default function Cart() {
                 </Button>
                 {totaldis}
               </CardContent>
-
               <CardHeader className=" pb-2 pt-1 font-bold">
                 쿠폰 번호
               </CardHeader>
               <CardContent className="flex size-full justify-center gap-2 rounded-none w-full">
                 {/*쿠폰 코드-% */}
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="coupon.couponCode"
                   render={({ field }) => (
@@ -793,7 +793,6 @@ export default function Cart() {
                     </FormItem>
                   )}
                 />
-
                 <Button
                   type="button"
                   variant="deepnavy"
@@ -801,7 +800,14 @@ export default function Cart() {
                   onClick={handleUseDiscount}
                 >
                   번호확인
-                </Button> */}
+                </Button>
+              </CardContent>
+              <CardContent className="flex size-full justify-center gap-2 rounded-none w-full">
+                <CouponCodeFrom
+                  form={form}
+                  cartData={cartData}
+                  setCartData={setCartData}
+                />
               </CardContent>
               <CardHeader className=" pb-2 pt-1 font-bold">포인트</CardHeader>
               <CardContent>

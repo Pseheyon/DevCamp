@@ -30,7 +30,7 @@ export const mockCartData: TsOrderSchemaType[] = [
     },
     paymentAmount: {
       discount: 0,
-      total: 0,
+      total: 2000,
     },
     paymentMethod: {
       payment: "option-one",
