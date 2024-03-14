@@ -79,30 +79,26 @@ const CouponPointUsedFrom: React.FC<Props> = ({
 
   const handleUseAllPoints = () => {
     const numericValue: number = cartData.coupon.pointsUsed;
-
-    if (isNaN(numericValue)) {
-      // 변환된 값이 NaN인 경우에 대한 처리
-      alert("숫자를 입력해주세요.");
+    if (cartData.coupon.pointsUsed > (amoutQuantitypay || total)) {
+      alert(`현재 총 금액이 쿠폰보다 적으므로 사용이 불가능 합니다.`);
       return;
-    }
-
-    if (numericValue > total) {
-      alert(`현재 총 금액이 ${total}이므로 사용이 불가능 합니다.`);
-      return;
+    } else if (setIsResetButtonShown(false) || setIsButtonClicked(false)) {
+      setIsResetButtonShown(true);
+      setIsButtonClicked(true);
     }
 
     // 5000 포인트 이상 보유 및 10,000 이상 구매 시에만 사용 가능
     const minPoints = 5000;
     const minPurchaseAmount = 10000;
 
-    if (numericValue < minPoints || total < minPurchaseAmount) {
+    if (numericValue > minPoints || total < minPurchaseAmount) {
       alert("포인트 또는 구매 금액이 부족하여 사용할 수 없습니다.");
       return;
     }
     const updatedtotal =
       cartData.paymentAmount.total - cartData.coupon.pointsUsed;
     const updatedtdiscount = -(
-      cartData.coupon.couponPoint - cartData.paymentAmount.total
+      cartData.coupon.pointsUsed - cartData.paymentAmount.total
     );
     form.setValue("paymentAmount.total", updatedtotal);
     form.setValue("paymentAmount.discount", updatedtdiscount);
@@ -114,9 +110,6 @@ const CouponPointUsedFrom: React.FC<Props> = ({
         discount: updatedtdiscount,
       },
     }));
-
-    setIsResetButtonShown(true);
-    setIsButtonClicked(false);
 
     console.log("포인트 사용 확인", cartData.coupon.pointsUsed);
     alert(cartData.paymentAmount.total);

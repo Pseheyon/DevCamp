@@ -74,28 +74,43 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
   };
 
   const handleUseAllPoints = () => {
-    const updatedtotal = amoutQuantitypay;
-
+    const updatedtotal =
+      cartData.paymentAmount.total - cartData.coupon.couponPoint;
     form.setValue("paymentAmount.total", updatedtotal);
     form.setValue("paymentAmount.discount", 0);
+
+    if (cartData.coupon.couponPoint > (amoutQuantitypay || total)) {
+      alert(`현재 총 금액이 쿠폰보다 적으므로 사용이 불가능 합니다.`);
+      return;
+    } else if (total < 0) {
+      alert(`현재금액이 0 원이므로 사용이 불가능 합니다.`);
+      return;
+    } else if (updatedtotal < 0) {
+      alert(`할인 금액이 0보다 낮아 구매가 불가능 합니다.`);
+      return;
+    } else if (setIsResetButtonShown(false) || setIsButtonClicked(false)) {
+      setIsResetButtonShown(true);
+      setIsButtonClicked(true);
+    }
 
     setCartData((prevCartData) => ({
       ...prevCartData,
       paymentAmount: {
         ...prevCartData.paymentAmount,
-        total: amoutQuantitypay,
+        total: updatedtotal,
         discount: 0,
       },
     }));
 
-    setIsResetButtonShown(true);
-    setIsButtonClicked(false);
     console.log("포인트 사용 확인", cartData.coupon.couponPoint);
   };
 
   const handleReset = () => {
-    const updatedtotal =
-      cartData.paymentAmount.total + cartData.coupon.couponPoint;
+    if (setIsResetButtonShown || setIsButtonClicked) {
+      setIsButtonClicked(false);
+      setIsResetButtonShown(false);
+    }
+    const updatedtotal = amoutQuantitypay;
     form.setValue("paymentAmount.total", updatedtotal);
     setCartData((prevCartData) => ({
       ...prevCartData,
@@ -104,8 +119,6 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
         total: updatedtotal,
       },
     }));
-    setIsButtonClicked(false);
-    setIsResetButtonShown(false);
   };
 
   return (
@@ -119,7 +132,6 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
               <Input
                 className="rounded-none bg-inherit border"
                 placeholder="0"
-                type="number"
                 {...field}
                 onChange={handlePointsUsedChange}
               />

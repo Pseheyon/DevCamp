@@ -743,34 +743,6 @@ export default function Cart() {
                 className="flex size-full justify-center gap-2 
               rounded-none w-full"
               >
-                {/*쿠폰 포인트-증정 */}
-                {/* <FormField
-                  control={form.control}
-                  name="coupon.couponPoint"
-                  render={({ field }) => (
-                    <FormItem className="basis-4/5">
-                      <FormControl className="w-full">
-                        <Input
-                          className="rounded-none bg-inherit border"
-                          placeholder="1,000"
-                          type="number"
-                          {...field}
-                          onChange={handlePointsUsedChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="button"
-                  variant="deepnavy"
-                  className="basis-1/5 text-center box-border rounded-[3px]"
-                  onClick={handleUseAllPoints}
-                >
-                  쿠폰적용
-                </Button> */}
                 <CouponPointFrom
                   form={form}
                   cartData={cartData}
@@ -922,7 +894,7 @@ export default function Cart() {
                 <div className="flex flex-row w-full justify-between items-center">
                   <h5>총 결제 금액</h5>
                   <h5 className=" font-black text-indigo-600 text-2xl">
-                    {cartData.paymentAmount.total + 25000}
+                    {cartData.paymentAmount.total + 2500}
                   </h5>
                 </div>
               </CardContent>

@@ -26,7 +26,7 @@ export const mockCartData: TsOrderSchemaType[] = [
     coupon: {
       couponPoint: 6000,
       couponCode: "DISCOUNT123-20% 할인 쿠폰",
-      pointsUsed: 20,
+      pointsUsed: 6000,
     },
     paymentAmount: {
       discount: 0,
