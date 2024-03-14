@@ -27,7 +27,11 @@ interface Props {
   setCartData: React.Dispatch<React.SetStateAction<TsOrderSchemaType>>;
 }
 
-const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
+const CouponPointUsedFrom: React.FC<Props> = ({
+  form,
+  cartData,
+  setCartData,
+}) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [isResetButtonShown, setIsResetButtonShown] = useState(false);
 
@@ -74,7 +78,7 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
   };
 
   const handleUseAllPoints = () => {
-    const numericValue: number = cartData.coupon.couponPoint;
+    const numericValue: number = cartData.coupon.pointsUsed;
 
     if (isNaN(numericValue)) {
       // 변환된 값이 NaN인 경우에 대한 처리
@@ -82,17 +86,13 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
       return;
     }
 
-    // 5000 포인트 이상 보유 및 10,000 이상 구매 시에만 사용 가능
-    const minPoints = 5000;
-    const minPurchaseAmount = 10000;
-
-    if (numericValue < minPoints || total < minPurchaseAmount) {
-      alert("포인트 또는 구매 금액이 부족하여 사용할 수 없습니다.");
+    if (numericValue > total) {
+      alert(`현재 총 금액이 ${total}이므로 사용이 불가능 합니다.`);
       return;
     }
 
     const updatedtotal =
-      cartData.paymentAmount.total - cartData.coupon.couponPoint;
+      cartData.paymentAmount.total - cartData.coupon.pointsUsed;
     form.setValue("paymentAmount.total", updatedtotal);
     setCartData((prevCartData) => ({
       ...prevCartData,
@@ -104,12 +104,14 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
 
     setIsResetButtonShown(true);
     setIsButtonClicked(false);
-    console.log("포인트 사용 확인", cartData.coupon.couponPoint);
+
+    console.log("포인트 사용 확인", cartData.coupon.pointsUsed);
+    alert(cartData.paymentAmount.total);
   };
 
   const handleReset = () => {
     const updatedtotal =
-      cartData.paymentAmount.total + cartData.coupon.couponPoint;
+      cartData.paymentAmount.total + cartData.coupon.pointsUsed;
     form.setValue("paymentAmount.total", updatedtotal);
     setCartData((prevCartData) => ({
       ...prevCartData,
@@ -126,14 +128,13 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
     <div className="flex size-full justify-center gap-2 rounded-none w-full">
       <FormField
         control={form.control}
-        name="coupon.couponPoint"
+        name="coupon.pointsUsed"
         render={({ field }) => (
           <FormItem className="basis-4/5">
             <FormControl className="w-full">
               <Input
                 className="rounded-none bg-inherit border"
                 placeholder="0"
-                type="number"
                 {...field}
                 onChange={handlePointsUsedChange}
               />
@@ -167,4 +168,4 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
   );
 };
 
-export default CouponPointFrom;
+export default CouponPointUsedFrom;

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 import { TsOrderSchemaType } from "@/validators/cartSchema"; // 필요한 타입 임포트
 
-interface CouponCodeFromProps {
+interface Props {
   form: UseFormReturn<TsOrderSchemaType>;
   cartData: TsOrderSchemaType;
   setCartData: React.Dispatch<React.SetStateAction<TsOrderSchemaType>>;
@@ -63,13 +63,11 @@ const CouponCodeFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
     }));
   };
   const handleUseDiscount = () => {
-    // 번호확인 버튼이 이미 클릭된 경우 처리 중지
     if (isButtonClicked) return;
 
-    // 나머지 로직은 여기에 작성
     const numericValue = cartData.coupon.couponCode;
     const percent = extractDiscountPercent(numericValue);
-    const maxPoints = cartData.paymentAmount.total; // 가용한 포인트 상한값
+    const maxPoints = cartData.paymentAmount.total;
 
     let updatedtotal =
       cartData.paymentAmount.total - maxPoints * (percent * 0.01);
@@ -92,7 +90,6 @@ const CouponCodeFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
       },
     }));
     console.log("쿠폰코드", cartData.coupon.couponCode);
-    alert(cartData.paymentAmount.total);
   };
 
   const handleReset = () => {

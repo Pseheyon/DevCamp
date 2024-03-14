@@ -31,6 +31,8 @@ import { Children, useEffect, useState } from "react";
 import { Divide } from "lucide-react";
 import { date } from "zod";
 import CouponCodeFrom from "@/components/couponCode";
+import CouponPointFrom from "@/components/couponPoint";
+import CouponPointUsedFrom from "@/components/couponPointUsed";
 
 //type TsOrderSchemaType = z.infer<typeof orderSchema>;
 
@@ -741,8 +743,8 @@ export default function Cart() {
                 className="flex size-full justify-center gap-2 
               rounded-none w-full"
               >
-                {/*쿠폰 포인트-- */}
-                <FormField
+                {/*쿠폰 포인트-증정 */}
+                {/* <FormField
                   control={form.control}
                   name="coupon.couponPoint"
                   render={({ field }) => (
@@ -768,7 +770,12 @@ export default function Cart() {
                   onClick={handleUseAllPoints}
                 >
                   쿠폰적용
-                </Button>
+                </Button> */}
+                <CouponPointFrom
+                  form={form}
+                  cartData={cartData}
+                  setCartData={setCartData}
+                />
                 {totaldis}
               </CardContent>
               <CardHeader className=" pb-2 pt-1 font-bold">
@@ -812,7 +819,7 @@ export default function Cart() {
               <CardHeader className=" pb-2 pt-1 font-bold">포인트</CardHeader>
               <CardContent>
                 <div className="flex size-full justify-center gap-2 rounded-none w-full">
-                  {/*쿠폰 포인트*/}
+                  {/*쿠폰 포인트 사용*/}
                   <FormField
                     control={form.control}
                     name="coupon.pointsUsed"
@@ -822,7 +829,6 @@ export default function Cart() {
                           <Input
                             className="rounded-none bg-inherit border"
                             placeholder="0"
-                            type="number"
                             {...field}
                             onChange={handlePointsDiscountChange}
                           />
@@ -840,6 +846,11 @@ export default function Cart() {
                   >
                     사용
                   </Button>
+                  <CouponPointUsedFrom
+                    form={form}
+                    cartData={cartData}
+                    setCartData={setCartData}
+                  />
                 </div>
                 <p className=" text-slate-800 text-s pt-1 font-bold">
                   보유 포인트 <span>{cartData.coupon.pointsUsed}</span>
