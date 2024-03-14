@@ -881,7 +881,8 @@ export default function Cart() {
                   />
 
                   <p className="font-bold">
-                    18000<span>원</span>
+                    {cartData.paymentAmount.total}
+                    <span>원</span>
                   </p>
                 </div>
                 <div className="flex flex-row w-full justify-between">
@@ -898,13 +899,14 @@ export default function Cart() {
                     )}
                   /> */}
                   {/*쿠폰 + 쿠폰 할인*/}
-                  <p className="text-slate-500 font-medium"></p>
+                  <p className="text-slate-500 font-medium">할인 가격</p>
                   <p className="font-bold">
-                    <span>-</span>1000<span>원</span>
+                    <span>{cartData.paymentAmount.discount}</span>
+                    <span>원</span>
                   </p>
                 </div>
                 <div className="flex flex-row w-full justify-between">
-                  <p className="text-slate-500 font-medium">포인트 사용</p>
+                  <p className="text-slate-500 font-medium"></p>
 
                   <p className="font-bold">
                     <span>-</span>0<span>원</span>
@@ -919,7 +921,9 @@ export default function Cart() {
                 <hr className="mt-4 mb-4" />
                 <div className="flex flex-row w-full justify-between items-center">
                   <h5>총 결제 금액</h5>
-                  <h5 className=" font-black text-indigo-600 text-2xl"></h5>
+                  <h5 className=" font-black text-indigo-600 text-2xl">
+                    {cartData.paymentAmount.total + 25000}
+                  </h5>
                 </div>
               </CardContent>
               <CardContent className=" bg-slate-50 w-full p-3 justify-items-center">

@@ -51,8 +51,8 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
       return;
     }
 
-    if (numericValue > amoutQuantitypay) {
-      alert(`현재 총 금액이 ${total}이므로 사용이 불가능 합니다.`);
+    if (numericValue < (amoutQuantitypay || total)) {
+      alert(`현재 총 금액이 쿠폰보다 적으므로 사용이 불가능 합니다.`);
       return;
     }
 
@@ -63,42 +63,28 @@ const CouponPointFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
       maxPoints - Math.max(minPoints, numericValue),
       0
     );
-
-    // setCartData((prevCartData) => ({
-    //   ...prevCartData,
-    //   coupon: {
-    //     ...prevCartData.coupon,
-    //     couponPoint: clampedValue,
-    //   },
-    // }));
-  };
-
-  const handleUseAllPoints = () => {
-    const numericValue: number = cartData.coupon.couponPoint;
-
-    if (isNaN(numericValue)) {
-      // 변환된 값이 NaN인 경우에 대한 처리
-      alert("숫자를 입력해주세요.");
-      return;
-    }
-
-    // 5000 포인트 이상 보유 및 10,000 이상 구매 시에만 사용 가능
-    const minPoints = 5000;
-    const minPurchaseAmount = 10000;
-
-    if (numericValue < minPoints || total < minPurchaseAmount) {
-      alert("포인트 또는 구매 금액이 부족하여 사용할 수 없습니다.");
-      return;
-    }
-
-    const updatedtotal =
-      cartData.paymentAmount.total - cartData.coupon.couponPoint;
-    form.setValue("paymentAmount.total", updatedtotal);
+    form.setValue("paymentAmount.discount", clampedValue);
     setCartData((prevCartData) => ({
       ...prevCartData,
       paymentAmount: {
         ...prevCartData.paymentAmount,
-        total: updatedtotal,
+        discount: numericValue,
+      },
+    }));
+  };
+
+  const handleUseAllPoints = () => {
+    const updatedtotal = amoutQuantitypay;
+
+    form.setValue("paymentAmount.total", updatedtotal);
+    form.setValue("paymentAmount.discount", 0);
+
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      paymentAmount: {
+        ...prevCartData.paymentAmount,
+        total: amoutQuantitypay,
+        discount: 0,
       },
     }));
 

@@ -53,7 +53,7 @@ const CouponCodeFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
     const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
 
     const clampedValue = maxPoints - maxPoints * (percent * 0.01);
-
+    form.setValue("paymentAmount.discount", clampedValue);
     setCartData((prevCartData) => ({
       ...prevCartData,
       coupon: {
@@ -95,19 +95,22 @@ const CouponCodeFrom: React.FC<Props> = ({ form, cartData, setCartData }) => {
   const handleReset = () => {
     setIsButtonClicked(false);
     setIsResetButtonShown(false);
-    const numericValue = cartData.coupon.couponCode;
-    const percent = extractDiscountPercent(numericValue);
-    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+    if (!setIsResetButtonShown) {
+      alert("쿠폰/포인트를 다시 적립해주세요");
+      return;
+    }
 
-    const updatedtotal =
-      cartData.paymentAmount.total + maxPoints * (percent * 0.01);
+    const updatedtotal = amoutQuantitypay;
 
     form.setValue("paymentAmount.total", updatedtotal);
+    form.setValue("paymentAmount.discount", 0);
+
     setCartData((prevCartData) => ({
       ...prevCartData,
       paymentAmount: {
         ...prevCartData.paymentAmount,
-        total: updatedtotal,
+        total: amoutQuantitypay,
+        discount: 0,
       },
     }));
   };
