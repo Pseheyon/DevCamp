@@ -25,7 +25,7 @@ import { TsOrderSchemaType, orderSchema } from "@/validators/cartSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { mockCartData } from "@/app/api/cart/route";
-import { z } from "zod";
+import { number, z } from "zod";
 import Image from "next/image";
 import { Children, useEffect, useState } from "react";
 import { Divide } from "lucide-react";
@@ -153,7 +153,7 @@ export default function Cart() {
     cartData.productInfo.price * cartData.productInfo.quantity;
 
   //포인트사용
-  const handlePointsUsedChange = (e) => {
+  const handlePointsUsedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numericValue = isNaN(parseFloat(e.target.value))
       ? e.target.value
       : parseFloat(e.target.value);
@@ -166,7 +166,6 @@ export default function Cart() {
       0
     );
 
-    // 포인트 사용이 변경되었을 때, 상태 업데이트
     setCartData((prevCartData) => ({
       ...prevCartData,
       coupon: {
@@ -189,17 +188,68 @@ export default function Cart() {
     }));
 
     console.log("포인트 사용 확인", cartData.coupon.couponPoint);
+    alert(cartData.paymentAmount.total);
   };
+  // 쿠폰 코드에서 할인 퍼센트를 추출하는 함수
+  const extractDiscountPercent = (code: string) => {
+    const regex = /(\d{1,2})%/;
+    const match = code.match(regex);
+    if (match) {
+      return parseInt(match[1]);
+    } else {
+      return 0;
+    }
+  };
+
+  //쿠폰형 데이터
+  const handlePointsDiscountChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const numericValue = e.target.value;
+    const percent = extractDiscountPercent(numericValue);
+
+    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+
+    const clampedValue = maxPoints - maxPoints * (percent * 0.01);
+
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      coupon: {
+        ...prevCartData.coupon,
+        couponCode: `쿠폰코드 ${clampedValue}%사용`,
+      },
+    }));
+  };
+
+  const handleUseDiscount = () => {
+    const numericValue = cartData.coupon.couponCode;
+    const percent = extractDiscountPercent(numericValue);
+    const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
+
+    const updatedtotal =
+      cartData.paymentAmount.total - maxPoints * (percent * 0.01);
+
+    form.setValue("paymentAmount.total", updatedtotal);
+    setCartData((prevCartData) => ({
+      ...prevCartData,
+      paymentAmount: {
+        ...prevCartData.paymentAmount,
+        total: updatedtotal,
+      },
+    }));
+    console.log("쿠폰코드", cartData.coupon.couponCode);
+    alert(cartData.paymentAmount.total);
+  };
+
   //포인트사용
-  const handlePointsDiscountChange = (e) => {
+  const handlePointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numericValue = isNaN(parseFloat(e.target.value))
       ? e.target.value
       : parseFloat(e.target.value);
 
-    const minPoints = 20;
     const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
 
-    const clampedValue = maxPoints - maxPoints * (minPoints * 0.01);
+    const clampedValue = maxPoints - maxPoints * (numericValue * 0.01);
 
     setCartData((prevCartData) => ({
       ...prevCartData,
@@ -210,7 +260,7 @@ export default function Cart() {
     }));
   };
 
-  const handleUseDiscount = () => {
+  const handleUse = () => {
     const minPoints = 20;
     const maxPoints = amoutQuantitypay; // 가용한 포인트 상한값
 
@@ -227,8 +277,6 @@ export default function Cart() {
     }));
     console.log("포인트 사용 확인", cartData.coupon.couponPoint);
   };
-
-  let totaldis = Math.max(amoutQuantitypay - cartData.coupon.couponPoint, 0);
 
   const onSubmit = async (data: TsOrderSchemaType) => {
     const response = await fetch("/api/cart", {
@@ -251,6 +299,7 @@ export default function Cart() {
     }
   };
 
+  let totaldis = Math.max(amoutQuantitypay - cartData.coupon.couponPoint, 0);
   return (
     <main className="bg-slate-50 grid justify-center ">
       <Form {...form}>
