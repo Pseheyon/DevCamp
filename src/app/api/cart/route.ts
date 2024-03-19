@@ -18,7 +18,7 @@ export const mockCartData: TsOrderSchemaType[] = [
     },
     shippingInfo: {
       address: "123 부산 중구 대동로 40-21번지 길바닥집, ",
-      shippingType: "000000",
+      shippingType: "dor",
       recipient: "쫀덕이",
       recipientphone: "123-456-7890",
       memo: "dor",
@@ -33,13 +33,14 @@ export const mockCartData: TsOrderSchemaType[] = [
       total: 2000,
     },
     paymentMethod: {
-      payment: "option-one",
+      payment: "",
       depositor: "박루미",
     },
     purchaseAgreement: {
       termsAndConditions: false,
       privacyPolicy: false,
     },
+    role: "admin",
   },
 ];
 

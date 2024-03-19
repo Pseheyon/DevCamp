@@ -1,6 +1,6 @@
 import { z } from "zod";
 const phoneRegex = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
-const userSchema = z.object({
+export const userSchema = z.object({
   username: z.string(),
   email: z.string().email({ message: "올바른 이메일 양식으로 기입해 주세요" }),
   phoneNumber: z.string(),
@@ -15,7 +15,7 @@ const productInfoSchema = z.object({
 
 const shippingInfoSchema = z.object({
   address: z.string(),
-  shippingType: z.string(),
+  shippingType: z.string().min(8, { message: "배송메모." }),
   recipient: z.string(),
   recipientphone: z.string(),
   memo: z.string(),
@@ -69,6 +69,7 @@ export const orderSchema = z.object({
   paymentAmount: paymentAmountSchema,
   paymentMethod: paymentMethodSchema,
   purchaseAgreement: purchaseAgreementSchema,
+  role: z.string().min(2, { message: "역할을." }),
 });
 
 export type TsOrderSchemaType = z.infer<typeof orderSchema>;

@@ -70,7 +70,7 @@ export default function Cart() {
       },
       shippingInfo: {
         address: cartData?.shippingInfo.address || "",
-        shippingType: cartData?.shippingInfo.shippingType || "",
+        shippingType: cartData?.shippingInfo.shippingType || "pa",
         recipient: cartData?.shippingInfo.recipient || "",
         recipientphone: cartData?.shippingInfo.recipientphone || "",
         memo: cartData?.shippingInfo.memo || "",
@@ -93,18 +93,19 @@ export default function Cart() {
           cartData?.purchaseAgreement.termsAndConditions || true,
         privacyPolicy: cartData?.purchaseAgreement.privacyPolicy || true,
       },
+      role: "",
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-    setError,
-  } = useForm<TsOrderSchemaType>({
-    resolver: zodResolver(orderSchema),
-  });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors, isSubmitting },
+  //   reset,
+  //   setError,
+  // } = useForm<TsOrderSchemaType>({
+  //   resolver: zodResolver(orderSchema),
+  // });
 
   //수량변경
   const handleQuantityChange = (newQuantity: number) => {
@@ -686,35 +687,59 @@ export default function Cart() {
                   )}
                 </div>
               </CardContent>
-              <CardContent>
-                {/*배송 메모*/}
-                <FormField
-                  control={form.control}
-                  name="shippingInfo.shippingType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="font-bold">배송 메모</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="배송메모를 선택해 주세요" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="dor">
-                            문앞에 두고 가주세요.
-                          </SelectItem>
-                          <SelectItem value="nock">노크 해주세요.</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
+              {/* <CardContent> */}
+              {/*배송 메모*/}
+              <FormField
+                control={form.control}
+                name="shippingInfo.shippingType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">배송 메모</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      //defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="배송메모를 선택해 주세요" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="dor">
+                          문앞에 두고 가주세요.
+                        </SelectItem>
+                        <SelectItem value="nock">노크 해주세요.</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* </CardContent> */}
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>역할</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="배송메모를 선택해 주세요" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="admin">관리자</SelectItem>
+                        <SelectItem value="user">일반사용자</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </Card>
             <Card className=" bg-white mt-4 mb-8 boder rounded-none box-border shadow-sm border">
               <CardTitle className="p-4 pt-5 ">쿠폰/포인트</CardTitle>
@@ -956,11 +981,11 @@ export default function Cart() {
                     <FormItem>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        //defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="00은행:000-00-0000 예금주명" />
+                            <SelectValue placeholder="은행을 선택해주세요" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
